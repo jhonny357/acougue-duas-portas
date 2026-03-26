@@ -133,7 +133,7 @@ O **Açougue Duas Portas** é um sistema web progressivo (PWA) completo para ges
 1. Faça um **Fork** deste repositório
 2. Vá em **Settings** > **Pages**
 3. Selecione a branch `main` e salve
-4. Acesse: `https://seu-usuario.github.io/acougue-duas-portas`
+4. Acesse: `https://jhonny357.github.io/acougue-duas-portas`
 
 ### Opção 2: Servidor Local
 

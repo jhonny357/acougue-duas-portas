@@ -1,0 +1,1272 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#8B0000">
+    <meta name="description" content="Sistema PDV e CRM - Açougue Duas Portas">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <title>Açougue Duas Portas</title>
+    
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" href="assets/icons/icon-192.png">
+    <link rel="apple-touch-icon" href="assets/icons/icon-192.png">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <!-- Splash Screen -->
+    <div id="splash-screen" class="splash-screen">
+        <div class="splash-content">
+            <div class="splash-logo">
+                <i class="fas fa-store"></i>
+            </div>
+            <h1>Açougue Duas Portas</h1>
+            <div class="splash-loader"></div>
+        </div>
+    </div>
+
+    <!-- Login Screen -->
+    <div id="login-screen" class="screen login-screen">
+        <div class="login-container">
+            <div class="login-header">
+                <div class="login-logo">
+                    <i class="fas fa-store"></i>
+                </div>
+                <h1>Açougue Duas Portas</h1>
+                <p>Sistema de Gestão</p>
+            </div>
+            
+            <form id="login-form" class="login-form">
+                <div class="form-group">
+                    <label for="login-user">
+                        <i class="fas fa-user"></i>
+                    </label>
+                    <input type="text" id="login-user" placeholder="Usuário" required autocomplete="username">
+                </div>
+                
+                <div class="form-group">
+                    <label for="login-pass">
+                        <i class="fas fa-lock"></i>
+                    </label>
+                    <input type="password" id="login-pass" placeholder="Senha" required autocomplete="current-password">
+                    <button type="button" class="toggle-password" onclick="togglePassword()">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+                
+                <div class="form-options">
+                    <label class="remember-me">
+                        <input type="checkbox" id="remember-me">
+                        <span>Lembrar-me</span>
+                    </label>
+                </div>
+                
+                <button type="submit" class="btn-login">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Entrar
+                </button>
+                
+                <div class="login-info">
+                    <p><strong>Acesso Demo:</strong></p>
+                    <p>Admin: admin / admin123</p>
+                    <p>Caixa: caixa / caixa123</p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div id="app" class="app hidden">
+        <!-- Sidebar -->
+        <aside id="sidebar" class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <i class="fas fa-store"></i>
+                    <span>Duas Portas</span>
+                </div>
+                <button class="sidebar-close" onclick="toggleSidebar()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="sidebar-user">
+                <div class="user-avatar">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+                <div class="user-info">
+                    <span id="sidebar-username">Usuário</span>
+                    <small id="sidebar-role">Cargo</small>
+                </div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <ul>
+                    <li>
+                        <a href="#" data-page="dashboard" class="active">
+                            <i class="fas fa-tachometer-alt"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" data-page="pdv">
+                            <i class="fas fa-cash-register"></i>
+                            <span>PDV - Vendas</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" data-page="clientes">
+                            <i class="fas fa-users"></i>
+                            <span>Clientes</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" data-page="estoque">
+                            <i class="fas fa-boxes"></i>
+                            <span>Estoque</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" data-page="financeiro">
+                            <i class="fas fa-dollar-sign"></i>
+                            <span>Financeiro</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" data-page="relatorios">
+                            <i class="fas fa-chart-bar"></i>
+                            <span>Relatórios</span>
+                        </a>
+                    </li>
+                    <li class="admin-only">
+                        <a href="#" data-page="configuracoes">
+                            <i class="fas fa-cog"></i>
+                            <span>Configurações</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <button onclick="logout()" class="btn-logout">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Sair</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Bar -->
+            <header class="topbar">
+                <button class="menu-toggle" onclick="toggleSidebar()">
+                    <i class="fas fa-bars"></i>
+                </button>
+                
+                <div class="topbar-title">
+                    <h1 id="page-title">Dashboard</h1>
+                </div>
+                
+                <div class="topbar-actions">
+                    <div class="topbar-date">
+                        <i class="fas fa-calendar"></i>
+                        <span id="current-date"></span>
+                    </div>
+                    <div class="topbar-time">
+                        <i class="fas fa-clock"></i>
+                        <span id="current-time"></span>
+                    </div>
+                    <div class="connection-status" id="connection-status">
+                        <i class="fas fa-wifi"></i>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Pages Container -->
+            <div class="pages-container">
+                <!-- Dashboard Page -->
+                <section id="page-dashboard" class="page active">
+                    <div class="dashboard-grid">
+                        <!-- Cards de Resumo -->
+                        <div class="card card-stat card-vendas">
+                            <div class="card-icon">
+                                <i class="fas fa-shopping-cart"></i>
+                            </div>
+                            <div class="card-content">
+                                <h3>Vendas Hoje</h3>
+                                <p class="card-value" id="dash-vendas-hoje">R$ 0,00</p>
+                                <small id="dash-qtd-vendas">0 vendas</small>
+                            </div>
+                        </div>
+                        
+                        <div class="card card-stat card-clientes">
+                            <div class="card-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="card-content">
+                                <h3>Clientes Ativos</h3>
+                                <p class="card-value" id="dash-clientes">0</p>
+                                <small>cadastrados</small>
+                            </div>
+                        </div>
+                        
+                        <div class="card card-stat card-estoque">
+                            <div class="card-icon">
+                                <i class="fas fa-boxes"></i>
+                            </div>
+                            <div class="card-content">
+                                <h3>Produtos</h3>
+                                <p class="card-value" id="dash-produtos">0</p>
+                                <small id="dash-estoque-baixo">0 em baixa</small>
+                            </div>
+                        </div>
+                        
+                        <div class="card card-stat card-fiado">
+                            <div class="card-icon">
+                                <i class="fas fa-hand-holding-usd"></i>
+                            </div>
+                            <div class="card-content">
+                                <h3>Fiados Pendentes</h3>
+                                <p class="card-value" id="dash-fiados">R$ 0,00</p>
+                                <small id="dash-qtd-fiados">0 clientes</small>
+                            </div>
+                        </div>
+                        
+                        <!-- Gráfico de Vendas -->
+                        <div class="card card-chart">
+                            <div class="card-header">
+                                <h3><i class="fas fa-chart-line"></i> Vendas da Semana</h3>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="chart-vendas"></canvas>
+                            </div>
+                        </div>
+                        
+                        <!-- Produtos Mais Vendidos -->
+                        <div class="card card-top-produtos">
+                            <div class="card-header">
+                                <h3><i class="fas fa-trophy"></i> Top 5 Produtos</h3>
+                            </div>
+                            <div class="top-produtos-list" id="top-produtos-list">
+                                <p class="empty-message">Nenhuma venda registrada</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Últimas Vendas -->
+                        <div class="card card-ultimas-vendas">
+                            <div class="card-header">
+                                <h3><i class="fas fa-history"></i> Últimas Vendas</h3>
+                            </div>
+                            <div class="ultimas-vendas-list" id="ultimas-vendas-list">
+                                <p class="empty-message">Nenhuma venda registrada</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Alertas -->
+                        <div class="card card-alertas">
+                            <div class="card-header">
+                                <h3><i class="fas fa-exclamation-triangle"></i> Alertas</h3>
+                            </div>
+                            <div class="alertas-list" id="alertas-list">
+                                <p class="empty-message">Nenhum alerta no momento</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- PDV Page -->
+                <section id="page-pdv" class="page">
+                    <div class="pdv-container">
+                        <!-- Área de Produtos -->
+                        <div class="pdv-produtos">
+                            <div class="pdv-search">
+                                <input type="text" id="pdv-search" placeholder="Buscar produto por nome ou código...">
+                                <button onclick="searchProduto()">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                            
+                            <div class="pdv-categorias">
+                                <button class="cat-btn active" data-cat="todos">Todos</button>
+                                <button class="cat-btn" data-cat="bovino">🐄 Bovino</button>
+                                <button class="cat-btn" data-cat="suino">🐷 Suíno</button>
+                                <button class="cat-btn" data-cat="aves">🐔 Aves</button>
+                                <button class="cat-btn" data-cat="embutidos">🌭 Embutidos</button>
+                                <button class="cat-btn" data-cat="outros">📦 Outros</button>
+                            </div>
+                            
+                            <div class="pdv-produtos-grid" id="pdv-produtos-grid">
+                                <!-- Produtos serão carregados aqui -->
+                            </div>
+                        </div>
+                        
+                        <!-- Área do Carrinho -->
+                        <div class="pdv-carrinho">
+                            <div class="carrinho-header">
+                                <h3><i class="fas fa-shopping-cart"></i> Carrinho</h3>
+                                <button class="btn-limpar" onclick="limparCarrinho()">
+                                    <i class="fas fa-trash"></i> Limpar
+                                </button>
+                            </div>
+                            
+                            <div class="carrinho-cliente">
+                                <select id="pdv-cliente">
+                                    <option value="">Cliente não identificado</option>
+                                </select>
+                                <button onclick="abrirModalNovoCliente()">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                            
+                            <div class="carrinho-itens" id="carrinho-itens">
+                                <p class="empty-cart">Carrinho vazio</p>
+                            </div>
+                            
+                            <div class="carrinho-totais">
+                                <div class="total-row">
+                                    <span>Subtotal:</span>
+                                    <span id="carrinho-subtotal">R$ 0,00</span>
+                                </div>
+                                <div class="total-row desconto-row">
+                                    <span>Desconto:</span>
+                                    <div class="desconto-input">
+                                        <input type="number" id="pdv-desconto" value="0" min="0">
+                                        <select id="pdv-desconto-tipo">
+                                            <option value="percent">%</option>
+                                            <option value="valor">R$</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="total-row total-final">
+                                    <span>TOTAL:</span>
+                                    <span id="carrinho-total">R$ 0,00</span>
+                                </div>
+                            </div>
+                            
+                            <div class="carrinho-pagamento">
+                                <select id="pdv-pagamento">
+                                    <option value="dinheiro">💵 Dinheiro</option>
+                                    <option value="pix">📱 PIX</option>
+                                    <option value="debito">💳 Débito</option>
+                                    <option value="credito">💳 Crédito</option>
+                                    <option value="fiado">📝 Fiado</option>
+                                </select>
+                            </div>
+                            
+                            <div class="carrinho-troco" id="carrinho-troco" style="display: none;">
+                                <div class="troco-row">
+                                    <span>Valor Recebido:</span>
+                                    <input type="number" id="pdv-valor-recebido" placeholder="0,00" step="0.01">
+                                </div>
+                                <div class="troco-row troco-valor">
+                                    <span>Troco:</span>
+                                    <span id="pdv-troco">R$ 0,00</span>
+                                </div>
+                            </div>
+                            
+                            <button class="btn-finalizar" onclick="finalizarVenda()">
+                                <i class="fas fa-check-circle"></i>
+                                Finalizar Venda
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Clientes Page -->
+                <section id="page-clientes" class="page">
+                    <div class="page-header">
+                        <div class="page-actions">
+                            <button class="btn-primary" onclick="abrirModalCliente()">
+                                <i class="fas fa-plus"></i> Novo Cliente
+                            </button>
+                        </div>
+                        <div class="page-search">
+                            <input type="text" id="clientes-search" placeholder="Buscar cliente..." oninput="filtrarClientes()">
+                        </div>
+                    </div>
+                    
+                    <div class="clientes-tabs">
+                        <button class="tab-btn active" data-tab="todos">Todos</button>
+                        <button class="tab-btn" data-tab="fiado">Com Fiado</button>
+                        <button class="tab-btn" data-tab="fidelidade">Fidelidade</button>
+                    </div>
+                    
+                    <div class="table-container">
+                        <table class="data-table" id="clientes-table">
+                            <thead>
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>Telefone</th>
+                                    <th>Fiado</th>
+                                    <th>Pontos</th>
+                                    <th>Última Compra</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="clientes-tbody">
+                                <!-- Dados carregados via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Estoque Page -->
+                <section id="page-estoque" class="page">
+                    <div class="page-header">
+                        <div class="page-actions">
+                            <button class="btn-primary" onclick="abrirModalProduto()">
+                                <i class="fas fa-plus"></i> Novo Produto
+                            </button>
+                            <button class="btn-secondary" onclick="abrirModalEntrada()">
+                                <i class="fas fa-arrow-down"></i> Entrada
+                            </button>
+                        </div>
+                        <div class="page-search">
+                            <input type="text" id="estoque-search" placeholder="Buscar produto..." oninput="filtrarEstoque()">
+                        </div>
+                    </div>
+                    
+                    <div class="estoque-tabs">
+                        <button class="tab-btn active" data-tab="todos">Todos</button>
+                        <button class="tab-btn" data-tab="bovino">Bovino</button>
+                        <button class="tab-btn" data-tab="suino">Suíno</button>
+                        <button class="tab-btn" data-tab="aves">Aves</button>
+                        <button class="tab-btn" data-tab="embutidos">Embutidos</button>
+                        <button class="tab-btn" data-tab="baixo">⚠️ Estoque Baixo</button>
+                    </div>
+                    
+                    <div class="table-container">
+                        <table class="data-table" id="estoque-table">
+                            <thead>
+                                <tr>
+                                    <th>Código</th>
+                                    <th>Produto</th>
+                                    <th>Categoria</th>
+                                    <th>Preço/Kg</th>
+                                    <th>Estoque</th>
+                                    <th>Validade</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="estoque-tbody">
+                                <!-- Dados carregados via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Financeiro Page -->
+                <section id="page-financeiro" class="page">
+                    <div class="financeiro-header">
+                        <div class="caixa-status" id="caixa-status">
+                            <div class="caixa-info">
+                                <h3>Status do Caixa</h3>
+                                <p id="caixa-estado">Fechado</p>
+                            </div>
+                            <button id="btn-caixa" class="btn-primary" onclick="toggleCaixa()">
+                                <i class="fas fa-cash-register"></i>
+                                <span>Abrir Caixa</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="financeiro-grid">
+                        <div class="card">
+                            <h3><i class="fas fa-arrow-up text-success"></i> Entradas</h3>
+                            <p class="value text-success" id="fin-entradas">R$ 0,00</p>
+                        </div>
+                        <div class="card">
+                            <h3><i class="fas fa-arrow-down text-danger"></i> Saídas</h3>
+                            <p class="value text-danger" id="fin-saidas">R$ 0,00</p>
+                        </div>
+                        <div class="card">
+                            <h3><i class="fas fa-wallet"></i> Saldo</h3>
+                            <p class="value" id="fin-saldo">R$ 0,00</p>
+                        </div>
+                        <div class="card">
+                            <h3><i class="fas fa-hand-holding-usd"></i> Fiados Hoje</h3>
+                            <p class="value text-warning" id="fin-fiados">R$ 0,00</p>
+                        </div>
+                    </div>
+                    
+                    <div class="financeiro-actions">
+                        <button class="btn-action" onclick="abrirModalSangria()">
+                            <i class="fas fa-money-bill-wave"></i>
+                            Sangria
+                        </button>
+                        <button class="btn-action" onclick="abrirModalReforco()">
+                            <i class="fas fa-plus-circle"></i>
+                            Reforço
+                        </button>
+                        <button class="btn-action" onclick="abrirModalReceberFiado()">
+                            <i class="fas fa-hand-holding-usd"></i>
+                            Receber Fiado
+                        </button>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-list"></i> Movimentações do Dia</h3>
+                        </div>
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Hora</th>
+                                        <th>Tipo</th>
+                                        <th>Descrição</th>
+                                        <th>Valor</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="movimentacoes-tbody">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Relatórios Page -->
+                <section id="page-relatorios" class="page">
+                    <div class="relatorios-filtros">
+                        <div class="filtro-grupo">
+                            <label>Período:</label>
+                            <select id="rel-periodo" onchange="atualizarRelatorios()">
+                                <option value="hoje">Hoje</option>
+                                <option value="semana">Esta Semana</option>
+                                <option value="mes">Este Mês</option>
+                                <option value="custom">Personalizado</option>
+                            </select>
+                        </div>
+                        <div class="filtro-grupo filtro-custom" style="display: none;">
+                            <label>De:</label>
+                            <input type="date" id="rel-data-inicio">
+                            <label>Até:</label>
+                            <input type="date" id="rel-data-fim">
+                            <button class="btn-secondary" onclick="atualizarRelatorios()">Filtrar</button>
+                        </div>
+                        <button class="btn-primary" onclick="exportarRelatorio()">
+                            <i class="fas fa-download"></i> Exportar
+                        </button>
+                    </div>
+                    
+                    <div class="relatorios-grid">
+                        <div class="card card-relatorio">
+                            <h3><i class="fas fa-chart-pie"></i> Vendas por Categoria</h3>
+                            <canvas id="chart-categorias"></canvas>
+                        </div>
+                        <div class="card card-relatorio">
+                            <h3><i class="fas fa-chart-bar"></i> Vendas por Forma de Pagamento</h3>
+                            <canvas id="chart-pagamentos"></canvas>
+                        </div>
+                        <div class="card card-relatorio full-width">
+                            <h3><i class="fas fa-table"></i> Detalhamento de Vendas</h3>
+                            <div class="table-container">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Data</th>
+                                            <th>Cliente</th>
+                                            <th>Produtos</th>
+                                            <th>Pagamento</th>
+                                            <th>Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="rel-vendas-tbody">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Configurações Page -->
+                <section id="page-configuracoes" class="page">
+                    <div class="config-tabs">
+                        <button class="tab-btn active" data-config="empresa">Empresa</button>
+                        <button class="tab-btn" data-config="usuarios">Usuários</button>
+                        <button class="tab-btn" data-config="sistema">Sistema</button>
+                        <button class="tab-btn" data-config="backup">Backup</button>
+                    </div>
+                    
+                    <!-- Config Empresa -->
+                    <div class="config-section active" id="config-empresa">
+                        <div class="card">
+                            <h3><i class="fas fa-store"></i> Dados da Empresa</h3>
+                            <form id="form-empresa">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>Nome da Empresa</label>
+                                        <input type="text" id="cfg-nome" value="Açougue Duas Portas">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>CNPJ</label>
+                                        <input type="text" id="cfg-cnpj" placeholder="00.000.000/0000-00">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>Telefone</label>
+                                        <input type="text" id="cfg-telefone" placeholder="(00) 00000-0000">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>WhatsApp</label>
+                                        <input type="text" id="cfg-whatsapp" placeholder="(00) 00000-0000">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Endereço</label>
+                                    <input type="text" id="cfg-endereco" placeholder="Rua, número, bairro - Cidade/UF">
+                                </div>
+                                <button type="submit" class="btn-primary">
+                                    <i class="fas fa-save"></i> Salvar
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    
+                    <!-- Config Usuários -->
+                    <div class="config-section" id="config-usuarios">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3><i class="fas fa-users-cog"></i> Gerenciar Usuários</h3>
+                                <button class="btn-primary" onclick="abrirModalUsuario()">
+                                    <i class="fas fa-plus"></i> Novo Usuário
+                                </button>
+                            </div>
+                            <div class="table-container">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Usuário</th>
+                                            <th>Nome</th>
+                                            <th>Cargo</th>
+                                            <th>Status</th>
+                                            <th>Ações</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="usuarios-tbody">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Config Sistema -->
+                    <div class="config-section" id="config-sistema">
+                        <div class="card">
+                            <h3><i class="fas fa-sliders-h"></i> Configurações do Sistema</h3>
+                            <form id="form-sistema">
+                                <div class="form-group">
+                                    <label>Pontos por R$ gasto (Fidelidade)</label>
+                                    <input type="number" id="cfg-pontos" value="1" min="0">
+                                </div>
+                                <div class="form-group">
+                                    <label>Estoque mínimo padrão (Kg)</label>
+                                    <input type="number" id="cfg-estoque-min" value="5" min="0">
+                                </div>
+                                <div class="form-group">
+                                    <label>Dias para alerta de validade</label>
+                                    <input type="number" id="cfg-validade-alerta" value="3" min="1">
+                                </div>
+                                <div class="form-group checkbox-group">
+                                    <label>
+                                        <input type="checkbox" id="cfg-som" checked>
+                                        Sons do sistema
+                                    </label>
+                                </div>
+                                <div class="form-group checkbox-group">
+                                    <label>
+                                        <input type="checkbox" id="cfg-confirmar-venda" checked>
+                                        Confirmar antes de finalizar venda
+                                    </label>
+                                </div>
+                                <button type="submit" class="btn-primary">
+                                    <i class="fas fa-save"></i> Salvar
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    
+                    <!-- Config Backup -->
+                    <div class="config-section" id="config-backup">
+                        <div class="card">
+                            <h3><i class="fas fa-database"></i> Backup e Restauração</h3>
+                            <div class="backup-actions">
+                                <div class="backup-item">
+                                    <div class="backup-info">
+                                        <i class="fas fa-download"></i>
+                                        <div>
+                                            <h4>Exportar Backup</h4>
+                                            <p>Baixe todos os dados do sistema em formato JSON</p>
+                                        </div>
+                                    </div>
+                                    <button class="btn-primary" onclick="exportarBackup()">
+                                        Exportar
+                                    </button>
+                                </div>
+                                <div class="backup-item">
+                                    <div class="backup-info">
+                                        <i class="fas fa-upload"></i>
+                                        <div>
+                                            <h4>Importar Backup</h4>
+                                            <p>Restaure dados a partir de um arquivo de backup</p>
+                                        </div>
+                                    </div>
+                                    <input type="file" id="backup-file" accept=".json" style="display: none;" onchange="importarBackup(event)">
+                                    <button class="btn-secondary" onclick="document.getElementById('backup-file').click()">
+                                        Importar
+                                    </button>
+                                </div>
+                                <div class="backup-item danger">
+                                    <div class="backup-info">
+                                        <i class="fas fa-exclamation-triangle"></i>
+                                        <div>
+                                            <h4>Limpar Dados</h4>
+                                            <p>Remove todos os dados do sistema (irreversível)</p>
+                                        </div>
+                                    </div>
+                                    <button class="btn-danger" onclick="limparDados()">
+                                        Limpar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modais -->
+    <!-- Modal Produto para PDV (peso/quantidade) -->
+    <div id="modal-pdv-produto" class="modal">
+        <div class="modal-content modal-sm">
+            <div class="modal-header">
+                <h3 id="modal-pdv-titulo">Adicionar Produto</h3>
+                <button class="modal-close" onclick="fecharModal('modal-pdv-produto')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="produto-info-modal">
+                    <h4 id="modal-pdv-nome">-</h4>
+                    <p id="modal-pdv-preco">R$ 0,00/Kg</p>
+                </div>
+                <div class="form-group">
+                    <label>Quantidade (Kg)</label>
+                    <input type="number" id="modal-pdv-quantidade" step="0.001" min="0.001" value="1" autofocus>
+                </div>
+                <div class="total-preview">
+                    <span>Total:</span>
+                    <span id="modal-pdv-total">R$ 0,00</span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="fecharModal('modal-pdv-produto')">Cancelar</button>
+                <button class="btn-primary" onclick="confirmarAdicionarCarrinho()">
+                    <i class="fas fa-cart-plus"></i> Adicionar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Cliente -->
+    <div id="modal-cliente" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-cliente-titulo">Novo Cliente</h3>
+                <button class="modal-close" onclick="fecharModal('modal-cliente')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="form-cliente">
+                    <input type="hidden" id="cliente-id">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Nome Completo *</label>
+                            <input type="text" id="cliente-nome" required>
+                        </div>
+                        <div class="form-group">
+                            <label>CPF</label>
+                            <input type="text" id="cliente-cpf" placeholder="000.000.000-00">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Telefone *</label>
+                            <input type="text" id="cliente-telefone" required placeholder="(00) 00000-0000">
+                        </div>
+                        <div class="form-group">
+                            <label>WhatsApp</label>
+                            <input type="text" id="cliente-whatsapp" placeholder="(00) 00000-0000">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Endereço</label>
+                        <input type="text" id="cliente-endereco">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Data de Nascimento</label>
+                            <input type="date" id="cliente-nascimento">
+                        </div>
+                        <div class="form-group">
+                            <label>Limite de Fiado (R$)</label>
+                            <input type="number" id="cliente-limite" value="0" min="0" step="0.01">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Observações</label>
+                        <textarea id="cliente-obs" rows="2"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="fecharModal('modal-cliente')">Cancelar</button>
+                <button class="btn-primary" onclick="salvarCliente()">
+                    <i class="fas fa-save"></i> Salvar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Produto -->
+    <div id="modal-produto" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-produto-titulo">Novo Produto</h3>
+                <button class="modal-close" onclick="fecharModal('modal-produto')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="form-produto">
+                    <input type="hidden" id="produto-id">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Código</label>
+                            <input type="text" id="produto-codigo" placeholder="Auto">
+                        </div>
+                        <div class="form-group">
+                            <label>Nome do Produto *</label>
+                            <input type="text" id="produto-nome" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Categoria *</label>
+                            <select id="produto-categoria" required>
+                                <option value="bovino">🐄 Bovino</option>
+                                <option value="suino">🐷 Suíno</option>
+                                <option value="aves">🐔 Aves</option>
+                                <option value="embutidos">🌭 Embutidos</option>
+                                <option value="outros">📦 Outros</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Unidade</label>
+                            <select id="produto-unidade">
+                                <option value="kg">Kg</option>
+                                <option value="un">Unidade</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Preço de Custo (R$)</label>
+                            <input type="number" id="produto-custo" step="0.01" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label>Preço de Venda (R$) *</label>
+                            <input type="number" id="produto-preco" step="0.01" min="0" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Estoque Atual</label>
+                            <input type="number" id="produto-estoque" step="0.001" min="0" value="0">
+                        </div>
+                        <div class="form-group">
+                            <label>Estoque Mínimo</label>
+                            <input type="number" id="produto-estoque-min" step="0.001" min="0" value="5">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Data de Validade</label>
+                        <input type="date" id="produto-validade">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="fecharModal('modal-produto')">Cancelar</button>
+                <button class="btn-primary" onclick="salvarProduto()">
+                    <i class="fas fa-save"></i> Salvar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Usuário -->
+    <div id="modal-usuario" class="modal">
+        <div class="modal-content modal-sm">
+            <div class="modal-header">
+                <h3 id="modal-usuario-titulo">Novo Usuário</h3>
+                <button class="modal-close" onclick="fecharModal('modal-usuario')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="form-usuario">
+                    <input type="hidden" id="usuario-id">
+                    <div class="form-group">
+                        <label>Nome Completo *</label>
+                        <input type="text" id="usuario-nome" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Usuário (login) *</label>
+                        <input type="text" id="usuario-login" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Senha *</label>
+                        <input type="password" id="usuario-senha" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Cargo *</label>
+                        <select id="usuario-cargo" required>
+                            <option value="caixa">Caixa</option>
+                            <option value="gerente">Gerente</option>
+                            <option value="admin">Administrador</option>
+                        </select>
+                    </div>
+                    <div class="form-group checkbox-group">
+                        <label>
+                            <input type="checkbox" id="usuario-ativo" checked>
+                            Usuário ativo
+                        </label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="fecharModal('modal-usuario')">Cancelar</button>
+                <button class="btn-primary" onclick="salvarUsuario()">
+                    <i class="fas fa-save"></i> Salvar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Caixa -->
+    <div id="modal-caixa" class="modal">
+        <div class="modal-content modal-sm">
+            <div class="modal-header">
+                <h3 id="modal-caixa-titulo">Abrir Caixa</h3>
+                <button class="modal-close" onclick="fecharModal('modal-caixa')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Valor Inicial (Fundo de Troco)</label>
+                    <input type="number" id="caixa-valor-inicial" step="0.01" min="0" value="200">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="fecharModal('modal-caixa')">Cancelar</button>
+                <button class="btn-primary" onclick="abrirCaixa()">
+                    <i class="fas fa-cash-register"></i> Abrir Caixa
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Sangria -->
+    <div id="modal-sangria" class="modal">
+        <div class="modal-content modal-sm">
+            <div class="modal-header">
+                <h3>Sangria de Caixa</h3>
+                <button class="modal-close" onclick="fecharModal('modal-sangria')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Valor da Sangria (R$)</label>
+                    <input type="number" id="sangria-valor" step="0.01" min="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label>Motivo</label>
+                    <textarea id="sangria-motivo" rows="2" placeholder="Descreva o motivo da sangria"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="fecharModal('modal-sangria')">Cancelar</button>
+                <button class="btn-primary" onclick="realizarSangria()">
+                    <i class="fas fa-check"></i> Confirmar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Reforço -->
+    <div id="modal-reforco" class="modal">
+        <div class="modal-content modal-sm">
+            <div class="modal-header">
+                <h3>Reforço de Caixa</h3>
+                <button class="modal-close" onclick="fecharModal('modal-reforco')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Valor do Reforço (R$)</label>
+                    <input type="number" id="reforco-valor" step="0.01" min="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label>Motivo</label>
+                    <textarea id="reforco-motivo" rows="2" placeholder="Descreva o motivo do reforço"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="fecharModal('modal-reforco')">Cancelar</button>
+                <button class="btn-primary" onclick="realizarReforco()">
+                    <i class="fas fa-check"></i> Confirmar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Receber Fiado -->
+    <div id="modal-receber-fiado" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Receber Fiado</h3>
+                <button class="modal-close" onclick="fecharModal('modal-receber-fiado')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Cliente</label>
+                    <select id="fiado-cliente" onchange="carregarFiadoCliente()">
+                        <option value="">Selecione um cliente</option>
+                    </select>
+                </div>
+                <div class="fiado-info" id="fiado-info" style="display: none;">
+                    <p>Valor em aberto: <strong id="fiado-total">R$ 0,00</strong></p>
+                </div>
+                <div class="form-group">
+                    <label>Valor a Receber (R$)</label>
+                    <input type="number" id="fiado-valor" step="0.01" min="0.01">
+                </div>
+                <div class="form-group">
+                    <label>Forma de Pagamento</label>
+                    <select id="fiado-pagamento">
+                        <option value="dinheiro">Dinheiro</option>
+                        <option value="pix">PIX</option>
+                        <option value="debito">Débito</option>
+                        <option value="credito">Crédito</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="fecharModal('modal-receber-fiado')">Cancelar</button>
+                <button class="btn-primary" onclick="receberFiado()">
+                    <i class="fas fa-check"></i> Receber
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Entrada Estoque -->
+    <div id="modal-entrada" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Entrada de Estoque</h3>
+                <button class="modal-close" onclick="fecharModal('modal-entrada')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Produto</label>
+                    <select id="entrada-produto">
+                        <option value="">Selecione um produto</option>
+                    </select>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Quantidade</label>
+                        <input type="number" id="entrada-quantidade" step="0.001" min="0.001">
+                    </div>
+                    <div class="form-group">
+                        <label>Custo Unitário (R$)</label>
+                        <input type="number" id="entrada-custo" step="0.01" min="0">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Data de Validade</label>
+                    <input type="date" id="entrada-validade">
+                </div>
+                <div class="form-group">
+                    <label>Fornecedor</label>
+                    <input type="text" id="entrada-fornecedor">
+                </div>
+                <div class="form-group">
+                    <label>Nota Fiscal</label>
+                    <input type="text" id="entrada-nf">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="fecharModal('modal-entrada')">Cancelar</button>
+                <button class="btn-primary" onclick="registrarEntrada()">
+                    <i class="fas fa-check"></i> Registrar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Fechamento de Caixa -->
+    <div id="modal-fechamento" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Fechamento de Caixa</h3>
+                <button class="modal-close" onclick="fecharModal('modal-fechamento')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="fechamento-resumo">
+                    <div class="resumo-item">
+                        <span>Valor Inicial:</span>
+                        <span id="fech-inicial">R$ 0,00</span>
+                    </div>
+                    <div class="resumo-item">
+                        <span>Vendas em Dinheiro:</span>
+                        <span id="fech-dinheiro">R$ 0,00</span>
+                    </div>
+                    <div class="resumo-item">
+                        <span>Vendas em PIX:</span>
+                        <span id="fech-pix">R$ 0,00</span>
+                    </div>
+                    <div class="resumo-item">
+                        <span>Vendas em Débito:</span>
+                        <span id="fech-debito">R$ 0,00</span>
+                    </div>
+                    <div class="resumo-item">
+                        <span>Vendas em Crédito:</span>
+                        <span id="fech-credito">R$ 0,00</span>
+                    </div>
+                    <div class="resumo-item">
+                        <span>Fiados:</span>
+                        <span id="fech-fiado">R$ 0,00</span>
+                    </div>
+                    <div class="resumo-item">
+                        <span>Sangrias:</span>
+                        <span id="fech-sangrias">R$ 0,00</span>
+                    </div>
+                    <div class="resumo-item">
+                        <span>Reforços:</span>
+                        <span id="fech-reforcos">R$ 0,00</span>
+                    </div>
+                    <div class="resumo-item total">
+                        <span>Valor Esperado em Caixa:</span>
+                        <span id="fech-esperado">R$ 0,00</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Valor Contado em Caixa (R$)</label>
+                    <input type="number" id="fech-contado" step="0.01" min="0" oninput="calcularDiferenca()">
+                </div>
+                <div class="diferenca-caixa" id="diferenca-caixa">
+                    <span>Diferença:</span>
+                    <span id="fech-diferenca">R$ 0,00</span>
+                </div>
+                <div class="form-group">
+                    <label>Observações</label>
+                    <textarea id="fech-obs" rows="2"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="fecharModal('modal-fechamento')">Cancelar</button>
+                <button class="btn-primary" onclick="fecharCaixa()">
+                    <i class="fas fa-lock"></i> Fechar Caixa
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Recibo -->
+    <div id="modal-recibo" class="modal">
+        <div class="modal-content modal-recibo">
+            <div class="modal-header">
+                <h3>Comprovante</h3>
+                <button class="modal-close" onclick="fecharModal('modal-recibo')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="recibo-container" id="recibo-container">
+                    <!-- Conteúdo do recibo -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="fecharModal('modal-recibo')">Fechar</button>
+                <button class="btn-primary" onclick="imprimirRecibo()">
+                    <i class="fas fa-print"></i> Imprimir
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Confirmação -->
+    <div id="modal-confirmar" class="modal">
+        <div class="modal-content modal-sm">
+            <div class="modal-header">
+                <h3 id="confirmar-titulo">Confirmar</h3>
+            </div>
+            <div class="modal-body">
+                <p id="confirmar-mensagem">Deseja confirmar esta ação?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="fecharModal('modal-confirmar')">Cancelar</button>
+                <button class="btn-primary" id="confirmar-btn" onclick="confirmarAcao()">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">
+        <div class="toast-content">
+            <i class="toast-icon fas fa-check-circle"></i>
+            <span class="toast-message">Mensagem</span>
+        </div>
+    </div>
+
+    <!-- Instalação PWA -->
+    <div id="install-prompt" class="install-prompt hidden">
+        <div class="install-content">
+            <i class="fas fa-download"></i>
+            <p>Instalar aplicativo?</p>
+            <div class="install-buttons">
+                <button onclick="installPWA()">Instalar</button>
+                <button onclick="dismissInstall()">Agora não</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/db.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/pdv.js"></script>
+    <script src="js/clientes.js"></script>
+    <script src="js/estoque.js"></script>
+    <script src="js/financeiro.js"></script>
+    <script src="js/relatorios.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

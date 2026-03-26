@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800">
+  <!-- Definições -->
+  <defs>
+    <!-- Gradiente para fundo -->
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#8B0000;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#5C0000;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- Sombra -->
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+  
+  <!-- Fundo com cantos arredondados -->
+  <rect width="800" height="800" rx="120" fill="url(#bgGradient)"/>
+  
+  <!-- Grupo principal com sombra -->
+  <g filter="url(#shadow)">
+    
+    <!-- Porta Esquerda -->
+    <rect x="180" y="180" width="160" height="380" rx="15" fill="#FFFFFF" opacity="0.95"/>
+    <rect x="200" y="200" width="120" height="340" rx="10" fill="#8B0000"/>
+    <!-- Maçaneta Esquerda -->
+    <circle cx="300" cy="380" r="12" fill="#FFFFFF"/>
+    <!-- Detalhe Porta -->
+    <rect x="210" y="210" width="100" height="150" rx="5" fill="#A52A2A" opacity="0.5"/>
+    <rect x="210" y="380" width="100" height="150" rx="5" fill="#A52A2A" opacity="0.5"/>
+    
+    <!-- Porta Direita -->
+    <rect x="460" y="180" width="160" height="380" rx="15" fill="#FFFFFF" opacity="0.95"/>
+    <rect x="480" y="200" width="120" height="340" rx="10" fill="#8B0000"/>
+    <!-- Maçaneta Direita -->
+    <circle cx="500" cy="380" r="12" fill="#FFFFFF"/>
+    <!-- Detalhe Porta -->
+    <rect x="490" y="210" width="100" height="150" rx="5" fill="#A52A2A" opacity="0.5"/>
+    <rect x="490" y="380" width="100" height="150" rx="5" fill="#A52A2A" opacity="0.5"/>
+    
+    <!-- Bife/Carne Estilizada no centro -->
+    <ellipse cx="400" cy="360" rx="85" ry="55" fill="#FFF5E6" opacity="0.95"/>
+    <ellipse cx="400" cy="360" rx="70" ry="45" fill="#FFE4C4"/>
+    
+    <!-- Textura da carne -->
+    <path d="M340 350 Q360 340 380 345 Q400 335 420 345 Q440 340 460 350" 
+          stroke="#D2691E" stroke-width="4" fill="none" 
+          stroke-linecap="round" opacity="0.6"/>
+    <path d="M340 360 Q360 355 380 358 Q400 353 420 358 Q440 355 460 360" 
+          stroke="#D2691E" stroke-width="4" fill="none" 
+          stroke-linecap="round" opacity="0.6"/>
+    <path d="M340 370 Q360 365 380 368 Q400 363 420 368 Q440 365 460 370" 
+          stroke="#D2691E" stroke-width="4" fill="none" 
+          stroke-linecap="round" opacity="0.6"/>
+    
+    <!-- Brilho na carne -->
+    <ellipse cx="380" cy="355" rx="20" ry="12" fill="#FFFFFF" opacity="0.4"/>
+    
+  </g>
+  
+  <!-- Texto "AÇOUGUE" -->
+  <text x="400" y="630" 
+        font-family="'Arial Black', sans-serif" 
+        font-size="48" 
+        font-weight="bold" 
+        text-anchor="middle" 
+        fill="#FFFFFF"
+        letter-spacing="4">AÇOUGUE</text>
+  
+  <!-- Texto "DUAS PORTAS" -->
+  <text x="400" y="695" 
+        font-family="'Arial Black', sans-serif" 
+        font-size="64" 
+        font-weight="bold" 
+        text-anchor="middle" 
+        fill="#FFFFFF"
+        letter-spacing="2">DUAS PORTAS</text>
+  
+  <!-- Linha decorativa superior -->
+  <line x1="150" y1="145" x2="650" y2="145" 
+        stroke="#FFFFFF" stroke-width="3" 
+        stroke-linecap="round" opacity="0.8"/>
+  
+  <!-- Linha decorativa inferior -->
+  <line x1="150" y1="720" x2="650" y2="720" 
+        stroke="#FFFFFF" stroke-width="3" 
+        stroke-linecap="round" opacity="0.8"/>
+  
+  <!-- Estrelas decorativas -->
+  <path d="M 200 120 L 205 130 L 215 130 L 207 136 L 210 146 L 200 140 L 190 146 L 193 136 L 185 130 L 195 130 Z" 
+        fill="#FFFFFF" opacity="0.7"/>
+  <path d="M 600 120 L 605 130 L 615 130 L 607 136 L 610 146 L 600 140 L 590 146 L 593 136 L 585 130 L 595 130 Z" 
+        fill="#FFFFFF" opacity="0.7"/>
+  
+</svg>

@@ -1,1272 +1,1815 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="theme-color" content="#8B0000">
-    <meta name="description" content="Sistema PDV e CRM - Açougue Duas Portas">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+/* ===== VARIÁVEIS CSS ===== */
+:root {
+    --primary: #8B0000;
+    --primary-dark: #5C0000;
+    --primary-light: #A52A2A;
+    --secondary: #2C3E50;
+    --secondary-light: #34495E;
+    --success: #27AE60;
+    --warning: #F39C12;
+    --danger: #E74C3C;
+    --info: #3498DB;
     
-    <title>Açougue Duas Portas</title>
+    --bg-primary: #F5F6FA;
+    --bg-secondary: #FFFFFF;
+    --bg-dark: #1A1A2E;
     
-    <link rel="manifest" href="manifest.json">
-    <link rel="icon" type="image/png" href="assets/icons/icon-192.png">
-    <link rel="apple-touch-icon" href="assets/icons/icon-192.png">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/styles.css">
-</head>
-<body>
-    <!-- Splash Screen -->
-    <div id="splash-screen" class="splash-screen">
-        <div class="splash-content">
-            <div class="splash-logo">
-                <i class="fas fa-store"></i>
-            </div>
-            <h1>Açougue Duas Portas</h1>
-            <div class="splash-loader"></div>
-        </div>
-    </div>
+    --text-primary: #2C3E50;
+    --text-secondary: #7F8C8D;
+    --text-light: #BDC3C7;
+    --text-white: #FFFFFF;
+    
+    --border-color: #E0E0E0;
+    --shadow: 0 2px 10px rgba(0,0,0,0.1);
+    --shadow-lg: 0 5px 25px rgba(0,0,0,0.15);
+    
+    --sidebar-width: 260px;
+    --topbar-height: 60px;
+    --border-radius: 12px;
+    --transition: all 0.3s ease;
+}
 
-    <!-- Login Screen -->
-    <div id="login-screen" class="screen login-screen">
-        <div class="login-container">
-            <div class="login-header">
-                <div class="login-logo">
-                    <i class="fas fa-store"></i>
-                </div>
-                <h1>Açougue Duas Portas</h1>
-                <p>Sistema de Gestão</p>
-            </div>
-            
-            <form id="login-form" class="login-form">
-                <div class="form-group">
-                    <label for="login-user">
-                        <i class="fas fa-user"></i>
-                    </label>
-                    <input type="text" id="login-user" placeholder="Usuário" required autocomplete="username">
-                </div>
-                
-                <div class="form-group">
-                    <label for="login-pass">
-                        <i class="fas fa-lock"></i>
-                    </label>
-                    <input type="password" id="login-pass" placeholder="Senha" required autocomplete="current-password">
-                    <button type="button" class="toggle-password" onclick="togglePassword()">
-                        <i class="fas fa-eye"></i>
-                    </button>
-                </div>
-                
-                <div class="form-options">
-                    <label class="remember-me">
-                        <input type="checkbox" id="remember-me">
-                        <span>Lembrar-me</span>
-                    </label>
-                </div>
-                
-                <button type="submit" class="btn-login">
-                    <i class="fas fa-sign-in-alt"></i>
-                    Entrar
-                </button>
-                
-                <div class="login-info">
-                    <p><strong>Acesso Demo:</strong></p>
-                    <p>Admin: admin / admin123</p>
-                    <p>Caixa: caixa / caixa123</p>
-                </div>
-            </form>
-        </div>
-    </div>
+/* ===== RESET ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-    <!-- Main App -->
-    <div id="app" class="app hidden">
-        <!-- Sidebar -->
-        <aside id="sidebar" class="sidebar">
-            <div class="sidebar-header">
-                <div class="sidebar-logo">
-                    <i class="fas fa-store"></i>
-                    <span>Duas Portas</span>
-                </div>
-                <button class="sidebar-close" onclick="toggleSidebar()">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            
-            <div class="sidebar-user">
-                <div class="user-avatar">
-                    <i class="fas fa-user-circle"></i>
-                </div>
-                <div class="user-info">
-                    <span id="sidebar-username">Usuário</span>
-                    <small id="sidebar-role">Cargo</small>
-                </div>
-            </div>
-            
-            <nav class="sidebar-nav">
-                <ul>
-                    <li>
-                        <a href="#" data-page="dashboard" class="active">
-                            <i class="fas fa-tachometer-alt"></i>
-                            <span>Dashboard</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" data-page="pdv">
-                            <i class="fas fa-cash-register"></i>
-                            <span>PDV - Vendas</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" data-page="clientes">
-                            <i class="fas fa-users"></i>
-                            <span>Clientes</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" data-page="estoque">
-                            <i class="fas fa-boxes"></i>
-                            <span>Estoque</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" data-page="financeiro">
-                            <i class="fas fa-dollar-sign"></i>
-                            <span>Financeiro</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" data-page="relatorios">
-                            <i class="fas fa-chart-bar"></i>
-                            <span>Relatórios</span>
-                        </a>
-                    </li>
-                    <li class="admin-only">
-                        <a href="#" data-page="configuracoes">
-                            <i class="fas fa-cog"></i>
-                            <span>Configurações</span>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-            
-            <div class="sidebar-footer">
-                <button onclick="logout()" class="btn-logout">
-                    <i class="fas fa-sign-out-alt"></i>
-                    <span>Sair</span>
-                </button>
-            </div>
-        </aside>
+html {
+    scroll-behavior: smooth;
+}
 
-        <!-- Main Content -->
-        <main class="main-content">
-            <!-- Top Bar -->
-            <header class="topbar">
-                <button class="menu-toggle" onclick="toggleSidebar()">
-                    <i class="fas fa-bars"></i>
-                </button>
-                
-                <div class="topbar-title">
-                    <h1 id="page-title">Dashboard</h1>
-                </div>
-                
-                <div class="topbar-actions">
-                    <div class="topbar-date">
-                        <i class="fas fa-calendar"></i>
-                        <span id="current-date"></span>
-                    </div>
-                    <div class="topbar-time">
-                        <i class="fas fa-clock"></i>
-                        <span id="current-time"></span>
-                    </div>
-                    <div class="connection-status" id="connection-status">
-                        <i class="fas fa-wifi"></i>
-                    </div>
-                </div>
-            </header>
+body {
+    font-family: 'Poppins', sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    line-height: 1.6;
+    overflow-x: hidden;
+}
 
-            <!-- Pages Container -->
-            <div class="pages-container">
-                <!-- Dashboard Page -->
-                <section id="page-dashboard" class="page active">
-                    <div class="dashboard-grid">
-                        <!-- Cards de Resumo -->
-                        <div class="card card-stat card-vendas">
-                            <div class="card-icon">
-                                <i class="fas fa-shopping-cart"></i>
-                            </div>
-                            <div class="card-content">
-                                <h3>Vendas Hoje</h3>
-                                <p class="card-value" id="dash-vendas-hoje">R$ 0,00</p>
-                                <small id="dash-qtd-vendas">0 vendas</small>
-                            </div>
-                        </div>
-                        
-                        <div class="card card-stat card-clientes">
-                            <div class="card-icon">
-                                <i class="fas fa-users"></i>
-                            </div>
-                            <div class="card-content">
-                                <h3>Clientes Ativos</h3>
-                                <p class="card-value" id="dash-clientes">0</p>
-                                <small>cadastrados</small>
-                            </div>
-                        </div>
-                        
-                        <div class="card card-stat card-estoque">
-                            <div class="card-icon">
-                                <i class="fas fa-boxes"></i>
-                            </div>
-                            <div class="card-content">
-                                <h3>Produtos</h3>
-                                <p class="card-value" id="dash-produtos">0</p>
-                                <small id="dash-estoque-baixo">0 em baixa</small>
-                            </div>
-                        </div>
-                        
-                        <div class="card card-stat card-fiado">
-                            <div class="card-icon">
-                                <i class="fas fa-hand-holding-usd"></i>
-                            </div>
-                            <div class="card-content">
-                                <h3>Fiados Pendentes</h3>
-                                <p class="card-value" id="dash-fiados">R$ 0,00</p>
-                                <small id="dash-qtd-fiados">0 clientes</small>
-                            </div>
-                        </div>
-                        
-                        <!-- Gráfico de Vendas -->
-                        <div class="card card-chart">
-                            <div class="card-header">
-                                <h3><i class="fas fa-chart-line"></i> Vendas da Semana</h3>
-                            </div>
-                            <div class="chart-container">
-                                <canvas id="chart-vendas"></canvas>
-                            </div>
-                        </div>
-                        
-                        <!-- Produtos Mais Vendidos -->
-                        <div class="card card-top-produtos">
-                            <div class="card-header">
-                                <h3><i class="fas fa-trophy"></i> Top 5 Produtos</h3>
-                            </div>
-                            <div class="top-produtos-list" id="top-produtos-list">
-                                <p class="empty-message">Nenhuma venda registrada</p>
-                            </div>
-                        </div>
-                        
-                        <!-- Últimas Vendas -->
-                        <div class="card card-ultimas-vendas">
-                            <div class="card-header">
-                                <h3><i class="fas fa-history"></i> Últimas Vendas</h3>
-                            </div>
-                            <div class="ultimas-vendas-list" id="ultimas-vendas-list">
-                                <p class="empty-message">Nenhuma venda registrada</p>
-                            </div>
-                        </div>
-                        
-                        <!-- Alertas -->
-                        <div class="card card-alertas">
-                            <div class="card-header">
-                                <h3><i class="fas fa-exclamation-triangle"></i> Alertas</h3>
-                            </div>
-                            <div class="alertas-list" id="alertas-list">
-                                <p class="empty-message">Nenhum alerta no momento</p>
-                            </div>
-                        </div>
-                    </div>
-                </section>
+a {
+    text-decoration: none;
+    color: inherit;
+}
 
-                <!-- PDV Page -->
-                <section id="page-pdv" class="page">
-                    <div class="pdv-container">
-                        <!-- Área de Produtos -->
-                        <div class="pdv-produtos">
-                            <div class="pdv-search">
-                                <input type="text" id="pdv-search" placeholder="Buscar produto por nome ou código...">
-                                <button onclick="searchProduto()">
-                                    <i class="fas fa-search"></i>
-                                </button>
-                            </div>
-                            
-                            <div class="pdv-categorias">
-                                <button class="cat-btn active" data-cat="todos">Todos</button>
-                                <button class="cat-btn" data-cat="bovino">🐄 Bovino</button>
-                                <button class="cat-btn" data-cat="suino">🐷 Suíno</button>
-                                <button class="cat-btn" data-cat="aves">🐔 Aves</button>
-                                <button class="cat-btn" data-cat="embutidos">🌭 Embutidos</button>
-                                <button class="cat-btn" data-cat="outros">📦 Outros</button>
-                            </div>
-                            
-                            <div class="pdv-produtos-grid" id="pdv-produtos-grid">
-                                <!-- Produtos serão carregados aqui -->
-                            </div>
-                        </div>
-                        
-                        <!-- Área do Carrinho -->
-                        <div class="pdv-carrinho">
-                            <div class="carrinho-header">
-                                <h3><i class="fas fa-shopping-cart"></i> Carrinho</h3>
-                                <button class="btn-limpar" onclick="limparCarrinho()">
-                                    <i class="fas fa-trash"></i> Limpar
-                                </button>
-                            </div>
-                            
-                            <div class="carrinho-cliente">
-                                <select id="pdv-cliente">
-                                    <option value="">Cliente não identificado</option>
-                                </select>
-                                <button onclick="abrirModalNovoCliente()">
-                                    <i class="fas fa-plus"></i>
-                                </button>
-                            </div>
-                            
-                            <div class="carrinho-itens" id="carrinho-itens">
-                                <p class="empty-cart">Carrinho vazio</p>
-                            </div>
-                            
-                            <div class="carrinho-totais">
-                                <div class="total-row">
-                                    <span>Subtotal:</span>
-                                    <span id="carrinho-subtotal">R$ 0,00</span>
-                                </div>
-                                <div class="total-row desconto-row">
-                                    <span>Desconto:</span>
-                                    <div class="desconto-input">
-                                        <input type="number" id="pdv-desconto" value="0" min="0">
-                                        <select id="pdv-desconto-tipo">
-                                            <option value="percent">%</option>
-                                            <option value="valor">R$</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="total-row total-final">
-                                    <span>TOTAL:</span>
-                                    <span id="carrinho-total">R$ 0,00</span>
-                                </div>
-                            </div>
-                            
-                            <div class="carrinho-pagamento">
-                                <select id="pdv-pagamento">
-                                    <option value="dinheiro">💵 Dinheiro</option>
-                                    <option value="pix">📱 PIX</option>
-                                    <option value="debito">💳 Débito</option>
-                                    <option value="credito">💳 Crédito</option>
-                                    <option value="fiado">📝 Fiado</option>
-                                </select>
-                            </div>
-                            
-                            <div class="carrinho-troco" id="carrinho-troco" style="display: none;">
-                                <div class="troco-row">
-                                    <span>Valor Recebido:</span>
-                                    <input type="number" id="pdv-valor-recebido" placeholder="0,00" step="0.01">
-                                </div>
-                                <div class="troco-row troco-valor">
-                                    <span>Troco:</span>
-                                    <span id="pdv-troco">R$ 0,00</span>
-                                </div>
-                            </div>
-                            
-                            <button class="btn-finalizar" onclick="finalizarVenda()">
-                                <i class="fas fa-check-circle"></i>
-                                Finalizar Venda
-                            </button>
-                        </div>
-                    </div>
-                </section>
+button {
+    cursor: pointer;
+    border: none;
+    outline: none;
+    font-family: inherit;
+}
 
-                <!-- Clientes Page -->
-                <section id="page-clientes" class="page">
-                    <div class="page-header">
-                        <div class="page-actions">
-                            <button class="btn-primary" onclick="abrirModalCliente()">
-                                <i class="fas fa-plus"></i> Novo Cliente
-                            </button>
-                        </div>
-                        <div class="page-search">
-                            <input type="text" id="clientes-search" placeholder="Buscar cliente..." oninput="filtrarClientes()">
-                        </div>
-                    </div>
-                    
-                    <div class="clientes-tabs">
-                        <button class="tab-btn active" data-tab="todos">Todos</button>
-                        <button class="tab-btn" data-tab="fiado">Com Fiado</button>
-                        <button class="tab-btn" data-tab="fidelidade">Fidelidade</button>
-                    </div>
-                    
-                    <div class="table-container">
-                        <table class="data-table" id="clientes-table">
-                            <thead>
-                                <tr>
-                                    <th>Nome</th>
-                                    <th>Telefone</th>
-                                    <th>Fiado</th>
-                                    <th>Pontos</th>
-                                    <th>Última Compra</th>
-                                    <th>Ações</th>
-                                </tr>
-                            </thead>
-                            <tbody id="clientes-tbody">
-                                <!-- Dados carregados via JS -->
-                            </tbody>
-                        </table>
-                    </div>
-                </section>
+input, select, textarea {
+    font-family: inherit;
+    outline: none;
+}
 
-                <!-- Estoque Page -->
-                <section id="page-estoque" class="page">
-                    <div class="page-header">
-                        <div class="page-actions">
-                            <button class="btn-primary" onclick="abrirModalProduto()">
-                                <i class="fas fa-plus"></i> Novo Produto
-                            </button>
-                            <button class="btn-secondary" onclick="abrirModalEntrada()">
-                                <i class="fas fa-arrow-down"></i> Entrada
-                            </button>
-                        </div>
-                        <div class="page-search">
-                            <input type="text" id="estoque-search" placeholder="Buscar produto..." oninput="filtrarEstoque()">
-                        </div>
-                    </div>
-                    
-                    <div class="estoque-tabs">
-                        <button class="tab-btn active" data-tab="todos">Todos</button>
-                        <button class="tab-btn" data-tab="bovino">Bovino</button>
-                        <button class="tab-btn" data-tab="suino">Suíno</button>
-                        <button class="tab-btn" data-tab="aves">Aves</button>
-                        <button class="tab-btn" data-tab="embutidos">Embutidos</button>
-                        <button class="tab-btn" data-tab="baixo">⚠️ Estoque Baixo</button>
-                    </div>
-                    
-                    <div class="table-container">
-                        <table class="data-table" id="estoque-table">
-                            <thead>
-                                <tr>
-                                    <th>Código</th>
-                                    <th>Produto</th>
-                                    <th>Categoria</th>
-                                    <th>Preço/Kg</th>
-                                    <th>Estoque</th>
-                                    <th>Validade</th>
-                                    <th>Ações</th>
-                                </tr>
-                            </thead>
-                            <tbody id="estoque-tbody">
-                                <!-- Dados carregados via JS -->
-                            </tbody>
-                        </table>
-                    </div>
-                </section>
+.hidden {
+    display: none !important;
+}
 
-                <!-- Financeiro Page -->
-                <section id="page-financeiro" class="page">
-                    <div class="financeiro-header">
-                        <div class="caixa-status" id="caixa-status">
-                            <div class="caixa-info">
-                                <h3>Status do Caixa</h3>
-                                <p id="caixa-estado">Fechado</p>
-                            </div>
-                            <button id="btn-caixa" class="btn-primary" onclick="toggleCaixa()">
-                                <i class="fas fa-cash-register"></i>
-                                <span>Abrir Caixa</span>
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <div class="financeiro-grid">
-                        <div class="card">
-                            <h3><i class="fas fa-arrow-up text-success"></i> Entradas</h3>
-                            <p class="value text-success" id="fin-entradas">R$ 0,00</p>
-                        </div>
-                        <div class="card">
-                            <h3><i class="fas fa-arrow-down text-danger"></i> Saídas</h3>
-                            <p class="value text-danger" id="fin-saidas">R$ 0,00</p>
-                        </div>
-                        <div class="card">
-                            <h3><i class="fas fa-wallet"></i> Saldo</h3>
-                            <p class="value" id="fin-saldo">R$ 0,00</p>
-                        </div>
-                        <div class="card">
-                            <h3><i class="fas fa-hand-holding-usd"></i> Fiados Hoje</h3>
-                            <p class="value text-warning" id="fin-fiados">R$ 0,00</p>
-                        </div>
-                    </div>
-                    
-                    <div class="financeiro-actions">
-                        <button class="btn-action" onclick="abrirModalSangria()">
-                            <i class="fas fa-money-bill-wave"></i>
-                            Sangria
-                        </button>
-                        <button class="btn-action" onclick="abrirModalReforco()">
-                            <i class="fas fa-plus-circle"></i>
-                            Reforço
-                        </button>
-                        <button class="btn-action" onclick="abrirModalReceberFiado()">
-                            <i class="fas fa-hand-holding-usd"></i>
-                            Receber Fiado
-                        </button>
-                    </div>
-                    
-                    <div class="card">
-                        <div class="card-header">
-                            <h3><i class="fas fa-list"></i> Movimentações do Dia</h3>
-                        </div>
-                        <div class="table-container">
-                            <table class="data-table">
-                                <thead>
-                                    <tr>
-                                        <th>Hora</th>
-                                        <th>Tipo</th>
-                                        <th>Descrição</th>
-                                        <th>Valor</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="movimentacoes-tbody">
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </section>
+/* ===== SPLASH SCREEN ===== */
+.splash-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+}
 
-                <!-- Relatórios Page -->
-                <section id="page-relatorios" class="page">
-                    <div class="relatorios-filtros">
-                        <div class="filtro-grupo">
-                            <label>Período:</label>
-                            <select id="rel-periodo" onchange="atualizarRelatorios()">
-                                <option value="hoje">Hoje</option>
-                                <option value="semana">Esta Semana</option>
-                                <option value="mes">Este Mês</option>
-                                <option value="custom">Personalizado</option>
-                            </select>
-                        </div>
-                        <div class="filtro-grupo filtro-custom" style="display: none;">
-                            <label>De:</label>
-                            <input type="date" id="rel-data-inicio">
-                            <label>Até:</label>
-                            <input type="date" id="rel-data-fim">
-                            <button class="btn-secondary" onclick="atualizarRelatorios()">Filtrar</button>
-                        </div>
-                        <button class="btn-primary" onclick="exportarRelatorio()">
-                            <i class="fas fa-download"></i> Exportar
-                        </button>
-                    </div>
-                    
-                    <div class="relatorios-grid">
-                        <div class="card card-relatorio">
-                            <h3><i class="fas fa-chart-pie"></i> Vendas por Categoria</h3>
-                            <canvas id="chart-categorias"></canvas>
-                        </div>
-                        <div class="card card-relatorio">
-                            <h3><i class="fas fa-chart-bar"></i> Vendas por Forma de Pagamento</h3>
-                            <canvas id="chart-pagamentos"></canvas>
-                        </div>
-                        <div class="card card-relatorio full-width">
-                            <h3><i class="fas fa-table"></i> Detalhamento de Vendas</h3>
-                            <div class="table-container">
-                                <table class="data-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Data</th>
-                                            <th>Cliente</th>
-                                            <th>Produtos</th>
-                                            <th>Pagamento</th>
-                                            <th>Total</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="rel-vendas-tbody">
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </section>
+.splash-screen.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
 
-                <!-- Configurações Page -->
-                <section id="page-configuracoes" class="page">
-                    <div class="config-tabs">
-                        <button class="tab-btn active" data-config="empresa">Empresa</button>
-                        <button class="tab-btn" data-config="usuarios">Usuários</button>
-                        <button class="tab-btn" data-config="sistema">Sistema</button>
-                        <button class="tab-btn" data-config="backup">Backup</button>
-                    </div>
-                    
-                    <!-- Config Empresa -->
-                    <div class="config-section active" id="config-empresa">
-                        <div class="card">
-                            <h3><i class="fas fa-store"></i> Dados da Empresa</h3>
-                            <form id="form-empresa">
-                                <div class="form-row">
-                                    <div class="form-group">
-                                        <label>Nome da Empresa</label>
-                                        <input type="text" id="cfg-nome" value="Açougue Duas Portas">
-                                    </div>
-                                    <div class="form-group">
-                                        <label>CNPJ</label>
-                                        <input type="text" id="cfg-cnpj" placeholder="00.000.000/0000-00">
-                                    </div>
-                                </div>
-                                <div class="form-row">
-                                    <div class="form-group">
-                                        <label>Telefone</label>
-                                        <input type="text" id="cfg-telefone" placeholder="(00) 00000-0000">
-                                    </div>
-                                    <div class="form-group">
-                                        <label>WhatsApp</label>
-                                        <input type="text" id="cfg-whatsapp" placeholder="(00) 00000-0000">
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label>Endereço</label>
-                                    <input type="text" id="cfg-endereco" placeholder="Rua, número, bairro - Cidade/UF">
-                                </div>
-                                <button type="submit" class="btn-primary">
-                                    <i class="fas fa-save"></i> Salvar
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                    
-                    <!-- Config Usuários -->
-                    <div class="config-section" id="config-usuarios">
-                        <div class="card">
-                            <div class="card-header">
-                                <h3><i class="fas fa-users-cog"></i> Gerenciar Usuários</h3>
-                                <button class="btn-primary" onclick="abrirModalUsuario()">
-                                    <i class="fas fa-plus"></i> Novo Usuário
-                                </button>
-                            </div>
-                            <div class="table-container">
-                                <table class="data-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Usuário</th>
-                                            <th>Nome</th>
-                                            <th>Cargo</th>
-                                            <th>Status</th>
-                                            <th>Ações</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="usuarios-tbody">
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Config Sistema -->
-                    <div class="config-section" id="config-sistema">
-                        <div class="card">
-                            <h3><i class="fas fa-sliders-h"></i> Configurações do Sistema</h3>
-                            <form id="form-sistema">
-                                <div class="form-group">
-                                    <label>Pontos por R$ gasto (Fidelidade)</label>
-                                    <input type="number" id="cfg-pontos" value="1" min="0">
-                                </div>
-                                <div class="form-group">
-                                    <label>Estoque mínimo padrão (Kg)</label>
-                                    <input type="number" id="cfg-estoque-min" value="5" min="0">
-                                </div>
-                                <div class="form-group">
-                                    <label>Dias para alerta de validade</label>
-                                    <input type="number" id="cfg-validade-alerta" value="3" min="1">
-                                </div>
-                                <div class="form-group checkbox-group">
-                                    <label>
-                                        <input type="checkbox" id="cfg-som" checked>
-                                        Sons do sistema
-                                    </label>
-                                </div>
-                                <div class="form-group checkbox-group">
-                                    <label>
-                                        <input type="checkbox" id="cfg-confirmar-venda" checked>
-                                        Confirmar antes de finalizar venda
-                                    </label>
-                                </div>
-                                <button type="submit" class="btn-primary">
-                                    <i class="fas fa-save"></i> Salvar
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                    
-                    <!-- Config Backup -->
-                    <div class="config-section" id="config-backup">
-                        <div class="card">
-                            <h3><i class="fas fa-database"></i> Backup e Restauração</h3>
-                            <div class="backup-actions">
-                                <div class="backup-item">
-                                    <div class="backup-info">
-                                        <i class="fas fa-download"></i>
-                                        <div>
-                                            <h4>Exportar Backup</h4>
-                                            <p>Baixe todos os dados do sistema em formato JSON</p>
-                                        </div>
-                                    </div>
-                                    <button class="btn-primary" onclick="exportarBackup()">
-                                        Exportar
-                                    </button>
-                                </div>
-                                <div class="backup-item">
-                                    <div class="backup-info">
-                                        <i class="fas fa-upload"></i>
-                                        <div>
-                                            <h4>Importar Backup</h4>
-                                            <p>Restaure dados a partir de um arquivo de backup</p>
-                                        </div>
-                                    </div>
-                                    <input type="file" id="backup-file" accept=".json" style="display: none;" onchange="importarBackup(event)">
-                                    <button class="btn-secondary" onclick="document.getElementById('backup-file').click()">
-                                        Importar
-                                    </button>
-                                </div>
-                                <div class="backup-item danger">
-                                    <div class="backup-info">
-                                        <i class="fas fa-exclamation-triangle"></i>
-                                        <div>
-                                            <h4>Limpar Dados</h4>
-                                            <p>Remove todos os dados do sistema (irreversível)</p>
-                                        </div>
-                                    </div>
-                                    <button class="btn-danger" onclick="limparDados()">
-                                        Limpar
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-            </div>
-        </main>
-    </div>
+.splash-content {
+    text-align: center;
+    color: var(--text-white);
+}
 
-    <!-- Modais -->
-    <!-- Modal Produto para PDV (peso/quantidade) -->
-    <div id="modal-pdv-produto" class="modal">
-        <div class="modal-content modal-sm">
-            <div class="modal-header">
-                <h3 id="modal-pdv-titulo">Adicionar Produto</h3>
-                <button class="modal-close" onclick="fecharModal('modal-pdv-produto')">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="produto-info-modal">
-                    <h4 id="modal-pdv-nome">-</h4>
-                    <p id="modal-pdv-preco">R$ 0,00/Kg</p>
-                </div>
-                <div class="form-group">
-                    <label>Quantidade (Kg)</label>
-                    <input type="number" id="modal-pdv-quantidade" step="0.001" min="0.001" value="1" autofocus>
-                </div>
-                <div class="total-preview">
-                    <span>Total:</span>
-                    <span id="modal-pdv-total">R$ 0,00</span>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn-secondary" onclick="fecharModal('modal-pdv-produto')">Cancelar</button>
-                <button class="btn-primary" onclick="confirmarAdicionarCarrinho()">
-                    <i class="fas fa-cart-plus"></i> Adicionar
-                </button>
-            </div>
-        </div>
-    </div>
+.splash-logo {
+    width: 100px;
+    height: 100px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    animation: pulse 2s infinite;
+}
 
-    <!-- Modal Cliente -->
-    <div id="modal-cliente" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 id="modal-cliente-titulo">Novo Cliente</h3>
-                <button class="modal-close" onclick="fecharModal('modal-cliente')">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="form-cliente">
-                    <input type="hidden" id="cliente-id">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Nome Completo *</label>
-                            <input type="text" id="cliente-nome" required>
-                        </div>
-                        <div class="form-group">
-                            <label>CPF</label>
-                            <input type="text" id="cliente-cpf" placeholder="000.000.000-00">
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Telefone *</label>
-                            <input type="text" id="cliente-telefone" required placeholder="(00) 00000-0000">
-                        </div>
-                        <div class="form-group">
-                            <label>WhatsApp</label>
-                            <input type="text" id="cliente-whatsapp" placeholder="(00) 00000-0000">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Endereço</label>
-                        <input type="text" id="cliente-endereco">
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Data de Nascimento</label>
-                            <input type="date" id="cliente-nascimento">
-                        </div>
-                        <div class="form-group">
-                            <label>Limite de Fiado (R$)</label>
-                            <input type="number" id="cliente-limite" value="0" min="0" step="0.01">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Observações</label>
-                        <textarea id="cliente-obs" rows="2"></textarea>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button class="btn-secondary" onclick="fecharModal('modal-cliente')">Cancelar</button>
-                <button class="btn-primary" onclick="salvarCliente()">
-                    <i class="fas fa-save"></i> Salvar
-                </button>
-            </div>
-        </div>
-    </div>
+.splash-logo i {
+    font-size: 48px;
+}
 
-    <!-- Modal Produto -->
-    <div id="modal-produto" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 id="modal-produto-titulo">Novo Produto</h3>
-                <button class="modal-close" onclick="fecharModal('modal-produto')">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="form-produto">
-                    <input type="hidden" id="produto-id">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Código</label>
-                            <input type="text" id="produto-codigo" placeholder="Auto">
-                        </div>
-                        <div class="form-group">
-                            <label>Nome do Produto *</label>
-                            <input type="text" id="produto-nome" required>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Categoria *</label>
-                            <select id="produto-categoria" required>
-                                <option value="bovino">🐄 Bovino</option>
-                                <option value="suino">🐷 Suíno</option>
-                                <option value="aves">🐔 Aves</option>
-                                <option value="embutidos">🌭 Embutidos</option>
-                                <option value="outros">📦 Outros</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Unidade</label>
-                            <select id="produto-unidade">
-                                <option value="kg">Kg</option>
-                                <option value="un">Unidade</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Preço de Custo (R$)</label>
-                            <input type="number" id="produto-custo" step="0.01" min="0">
-                        </div>
-                        <div class="form-group">
-                            <label>Preço de Venda (R$) *</label>
-                            <input type="number" id="produto-preco" step="0.01" min="0" required>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Estoque Atual</label>
-                            <input type="number" id="produto-estoque" step="0.001" min="0" value="0">
-                        </div>
-                        <div class="form-group">
-                            <label>Estoque Mínimo</label>
-                            <input type="number" id="produto-estoque-min" step="0.001" min="0" value="5">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Data de Validade</label>
-                        <input type="date" id="produto-validade">
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button class="btn-secondary" onclick="fecharModal('modal-produto')">Cancelar</button>
-                <button class="btn-primary" onclick="salvarProduto()">
-                    <i class="fas fa-save"></i> Salvar
-                </button>
-            </div>
-        </div>
-    </div>
+.splash-content h1 {
+    font-size: 28px;
+    margin-bottom: 20px;
+}
 
-    <!-- Modal Usuário -->
-    <div id="modal-usuario" class="modal">
-        <div class="modal-content modal-sm">
-            <div class="modal-header">
-                <h3 id="modal-usuario-titulo">Novo Usuário</h3>
-                <button class="modal-close" onclick="fecharModal('modal-usuario')">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="form-usuario">
-                    <input type="hidden" id="usuario-id">
-                    <div class="form-group">
-                        <label>Nome Completo *</label>
-                        <input type="text" id="usuario-nome" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Usuário (login) *</label>
-                        <input type="text" id="usuario-login" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Senha *</label>
-                        <input type="password" id="usuario-senha" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Cargo *</label>
-                        <select id="usuario-cargo" required>
-                            <option value="caixa">Caixa</option>
-                            <option value="gerente">Gerente</option>
-                            <option value="admin">Administrador</option>
-                        </select>
-                    </div>
-                    <div class="form-group checkbox-group">
-                        <label>
-                            <input type="checkbox" id="usuario-ativo" checked>
-                            Usuário ativo
-                        </label>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button class="btn-secondary" onclick="fecharModal('modal-usuario')">Cancelar</button>
-                <button class="btn-primary" onclick="salvarUsuario()">
-                    <i class="fas fa-save"></i> Salvar
-                </button>
-            </div>
-        </div>
-    </div>
+.splash-loader {
+    width: 50px;
+    height: 4px;
+    background: rgba(255,255,255,0.3);
+    border-radius: 2px;
+    margin: 0 auto;
+    overflow: hidden;
+}
 
-    <!-- Modal Caixa -->
-    <div id="modal-caixa" class="modal">
-        <div class="modal-content modal-sm">
-            <div class="modal-header">
-                <h3 id="modal-caixa-titulo">Abrir Caixa</h3>
-                <button class="modal-close" onclick="fecharModal('modal-caixa')">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label>Valor Inicial (Fundo de Troco)</label>
-                    <input type="number" id="caixa-valor-inicial" step="0.01" min="0" value="200">
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn-secondary" onclick="fecharModal('modal-caixa')">Cancelar</button>
-                <button class="btn-primary" onclick="abrirCaixa()">
-                    <i class="fas fa-cash-register"></i> Abrir Caixa
-                </button>
-            </div>
-        </div>
-    </div>
+.splash-loader::after {
+    content: '';
+    display: block;
+    width: 30%;
+    height: 100%;
+    background: var(--text-white);
+    border-radius: 2px;
+    animation: loading 1s infinite ease-in-out;
+}
 
-    <!-- Modal Sangria -->
-    <div id="modal-sangria" class="modal">
-        <div class="modal-content modal-sm">
-            <div class="modal-header">
-                <h3>Sangria de Caixa</h3>
-                <button class="modal-close" onclick="fecharModal('modal-sangria')">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label>Valor da Sangria (R$)</label>
-                    <input type="number" id="sangria-valor" step="0.01" min="0.01" required>
-                </div>
-                <div class="form-group">
-                    <label>Motivo</label>
-                    <textarea id="sangria-motivo" rows="2" placeholder="Descreva o motivo da sangria"></textarea>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn-secondary" onclick="fecharModal('modal-sangria')">Cancelar</button>
-                <button class="btn-primary" onclick="realizarSangria()">
-                    <i class="fas fa-check"></i> Confirmar
-                </button>
-            </div>
-        </div>
-    </div>
+@keyframes loading {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(400%); }
+}
 
-    <!-- Modal Reforço -->
-    <div id="modal-reforco" class="modal">
-        <div class="modal-content modal-sm">
-            <div class="modal-header">
-                <h3>Reforço de Caixa</h3>
-                <button class="modal-close" onclick="fecharModal('modal-reforco')">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label>Valor do Reforço (R$)</label>
-                    <input type="number" id="reforco-valor" step="0.01" min="0.01" required>
-                </div>
-                <div class="form-group">
-                    <label>Motivo</label>
-                    <textarea id="reforco-motivo" rows="2" placeholder="Descreva o motivo do reforço"></textarea>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn-secondary" onclick="fecharModal('modal-reforco')">Cancelar</button>
-                <button class="btn-primary" onclick="realizarReforco()">
-                    <i class="fas fa-check"></i> Confirmar
-                </button>
-            </div>
-        </div>
-    </div>
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
 
-    <!-- Modal Receber Fiado -->
-    <div id="modal-receber-fiado" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Receber Fiado</h3>
-                <button class="modal-close" onclick="fecharModal('modal-receber-fiado')">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label>Cliente</label>
-                    <select id="fiado-cliente" onchange="carregarFiadoCliente()">
-                        <option value="">Selecione um cliente</option>
-                    </select>
-                </div>
-                <div class="fiado-info" id="fiado-info" style="display: none;">
-                    <p>Valor em aberto: <strong id="fiado-total">R$ 0,00</strong></p>
-                </div>
-                <div class="form-group">
-                    <label>Valor a Receber (R$)</label>
-                    <input type="number" id="fiado-valor" step="0.01" min="0.01">
-                </div>
-                <div class="form-group">
-                    <label>Forma de Pagamento</label>
-                    <select id="fiado-pagamento">
-                        <option value="dinheiro">Dinheiro</option>
-                        <option value="pix">PIX</option>
-                        <option value="debito">Débito</option>
-                        <option value="credito">Crédito</option>
-                    </select>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn-secondary" onclick="fecharModal('modal-receber-fiado')">Cancelar</button>
-                <button class="btn-primary" onclick="receberFiado()">
-                    <i class="fas fa-check"></i> Receber
-                </button>
-            </div>
-        </div>
-    </div>
+/* ===== LOGIN SCREEN ===== */
+.login-screen {
+    min-height: 100vh;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
 
-    <!-- Modal Entrada Estoque -->
-    <div id="modal-entrada" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Entrada de Estoque</h3>
-                <button class="modal-close" onclick="fecharModal('modal-entrada')">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label>Produto</label>
-                    <select id="entrada-produto">
-                        <option value="">Selecione um produto</option>
-                    </select>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Quantidade</label>
-                        <input type="number" id="entrada-quantidade" step="0.001" min="0.001">
-                    </div>
-                    <div class="form-group">
-                        <label>Custo Unitário (R$)</label>
-                        <input type="number" id="entrada-custo" step="0.01" min="0">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>Data de Validade</label>
-                    <input type="date" id="entrada-validade">
-                </div>
-                <div class="form-group">
-                    <label>Fornecedor</label>
-                    <input type="text" id="entrada-fornecedor">
-                </div>
-                <div class="form-group">
-                    <label>Nota Fiscal</label>
-                    <input type="text" id="entrada-nf">
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn-secondary" onclick="fecharModal('modal-entrada')">Cancelar</button>
-                <button class="btn-primary" onclick="registrarEntrada()">
-                    <i class="fas fa-check"></i> Registrar
-                </button>
-            </div>
-        </div>
-    </div>
+.login-container {
+    background: var(--bg-secondary);
+    border-radius: var(--border-radius);
+    padding: 40px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: var(--shadow-lg);
+}
 
-    <!-- Modal Fechamento de Caixa -->
-    <div id="modal-fechamento" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Fechamento de Caixa</h3>
-                <button class="modal-close" onclick="fecharModal('modal-fechamento')">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="fechamento-resumo">
-                    <div class="resumo-item">
-                        <span>Valor Inicial:</span>
-                        <span id="fech-inicial">R$ 0,00</span>
-                    </div>
-                    <div class="resumo-item">
-                        <span>Vendas em Dinheiro:</span>
-                        <span id="fech-dinheiro">R$ 0,00</span>
-                    </div>
-                    <div class="resumo-item">
-                        <span>Vendas em PIX:</span>
-                        <span id="fech-pix">R$ 0,00</span>
-                    </div>
-                    <div class="resumo-item">
-                        <span>Vendas em Débito:</span>
-                        <span id="fech-debito">R$ 0,00</span>
-                    </div>
-                    <div class="resumo-item">
-                        <span>Vendas em Crédito:</span>
-                        <span id="fech-credito">R$ 0,00</span>
-                    </div>
-                    <div class="resumo-item">
-                        <span>Fiados:</span>
-                        <span id="fech-fiado">R$ 0,00</span>
-                    </div>
-                    <div class="resumo-item">
-                        <span>Sangrias:</span>
-                        <span id="fech-sangrias">R$ 0,00</span>
-                    </div>
-                    <div class="resumo-item">
-                        <span>Reforços:</span>
-                        <span id="fech-reforcos">R$ 0,00</span>
-                    </div>
-                    <div class="resumo-item total">
-                        <span>Valor Esperado em Caixa:</span>
-                        <span id="fech-esperado">R$ 0,00</span>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>Valor Contado em Caixa (R$)</label>
-                    <input type="number" id="fech-contado" step="0.01" min="0" oninput="calcularDiferenca()">
-                </div>
-                <div class="diferenca-caixa" id="diferenca-caixa">
-                    <span>Diferença:</span>
-                    <span id="fech-diferenca">R$ 0,00</span>
-                </div>
-                <div class="form-group">
-                    <label>Observações</label>
-                    <textarea id="fech-obs" rows="2"></textarea>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn-secondary" onclick="fecharModal('modal-fechamento')">Cancelar</button>
-                <button class="btn-primary" onclick="fecharCaixa()">
-                    <i class="fas fa-lock"></i> Fechar Caixa
-                </button>
-            </div>
-        </div>
-    </div>
+.login-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
 
-    <!-- Modal Recibo -->
-    <div id="modal-recibo" class="modal">
-        <div class="modal-content modal-recibo">
-            <div class="modal-header">
-                <h3>Comprovante</h3>
-                <button class="modal-close" onclick="fecharModal('modal-recibo')">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="recibo-container" id="recibo-container">
-                    <!-- Conteúdo do recibo -->
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn-secondary" onclick="fecharModal('modal-recibo')">Fechar</button>
-                <button class="btn-primary" onclick="imprimirRecibo()">
-                    <i class="fas fa-print"></i> Imprimir
-                </button>
-            </div>
-        </div>
-    </div>
+.login-logo {
+    width: 80px;
+    height: 80px;
+    background: var(--primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 15px;
+}
 
-    <!-- Modal Confirmação -->
-    <div id="modal-confirmar" class="modal">
-        <div class="modal-content modal-sm">
-            <div class="modal-header">
-                <h3 id="confirmar-titulo">Confirmar</h3>
-            </div>
-            <div class="modal-body">
-                <p id="confirmar-mensagem">Deseja confirmar esta ação?</p>
-            </div>
-            <div class="modal-footer">
-                <button class="btn-secondary" onclick="fecharModal('modal-confirmar')">Cancelar</button>
-                <button class="btn-primary" id="confirmar-btn" onclick="confirmarAcao()">Confirmar</button>
-            </div>
-        </div>
-    </div>
+.login-logo i {
+    font-size: 36px;
+    color: var(--text-white);
+}
 
-    <!-- Toast Notification -->
-    <div id="toast" class="toast">
-        <div class="toast-content">
-            <i class="toast-icon fas fa-check-circle"></i>
-            <span class="toast-message">Mensagem</span>
-        </div>
-    </div>
+.login-header h1 {
+    color: var(--primary);
+    font-size: 24px;
+    margin-bottom: 5px;
+}
 
-    <!-- Instalação PWA -->
-    <div id="install-prompt" class="install-prompt hidden">
-        <div class="install-content">
-            <i class="fas fa-download"></i>
-            <p>Instalar aplicativo?</p>
-            <div class="install-buttons">
-                <button onclick="installPWA()">Instalar</button>
-                <button onclick="dismissInstall()">Agora não</button>
-            </div>
-        </div>
-    </div>
+.login-header p {
+    color: var(--text-secondary);
+    font-size: 14px;
+}
 
-    <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="js/db.js"></script>
-    <script src="js/auth.js"></script>
-    <script src="js/pdv.js"></script>
-    <script src="js/clientes.js"></script>
-    <script src="js/estoque.js"></script>
-    <script src="js/financeiro.js"></script>
-    <script src="js/relatorios.js"></script>
-    <script src="js/app.js"></script>
-</body>
-</html>
+.login-form .form-group {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.login-form .form-group label {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-secondary);
+    pointer-events: none;
+}
+
+.login-form .form-group input {
+    width: 100%;
+    padding: 15px 15px 15px 45px;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 16px;
+    transition: var(--transition);
+}
+
+.login-form .form-group input:focus {
+    border-color: var(--primary);
+}
+
+.toggle-password {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    color: var(--text-secondary);
+}
+
+.form-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+.remember-me {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.remember-me input {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--primary);
+}
+
+.btn-login {
+    width: 100%;
+    padding: 15px;
+    background: var(--primary);
+    color: var(--text-white);
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: var(--transition);
+}
+
+.btn-login:hover {
+    background: var(--primary-dark);
+}
+
+.login-info {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color);
+    text-align: center;
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+.login-info p {
+    margin-bottom: 5px;
+}
+
+/* ===== APP LAYOUT ===== */
+.app {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* ===== SIDEBAR ===== */
+.sidebar {
+    width: var(--sidebar-width);
+    background: var(--bg-dark);
+    color: var(--text-white);
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    z-index: 1000;
+    transition: var(--transition);
+}
+
+.sidebar.collapsed {
+    transform: translateX(-100%);
+}
+
+.sidebar-header {
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.sidebar-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.sidebar-logo i {
+    font-size: 28px;
+    color: var(--primary-light);
+}
+
+.sidebar-logo span {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.sidebar-close {
+    display: none;
+    background: none;
+    color: var(--text-white);
+    font-size: 20px;
+}
+
+.sidebar-user {
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(255,255,255,0.05);
+}
+
+.user-avatar i {
+    font-size: 40px;
+    color: var(--primary-light);
+}
+
+.user-info span {
+    display: block;
+    font-weight: 500;
+}
+
+.user-info small {
+    color: var(--text-light);
+    font-size: 12px;
+}
+
+.sidebar-nav {
+    flex: 1;
+    padding: 15px 0;
+    overflow-y: auto;
+}
+
+.sidebar-nav ul {
+    list-style: none;
+}
+
+.sidebar-nav a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 20px;
+    color: var(--text-light);
+    transition: var(--transition);
+    border-left: 3px solid transparent;
+}
+
+.sidebar-nav a:hover {
+    background: rgba(255,255,255,0.05);
+    color: var(--text-white);
+}
+
+.sidebar-nav a.active {
+    background: rgba(139, 0, 0, 0.3);
+    color: var(--text-white);
+    border-left-color: var(--primary-light);
+}
+
+.sidebar-nav a i {
+    width: 20px;
+    text-align: center;
+}
+
+.sidebar-footer {
+    padding: 15px 20px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+.btn-logout {
+    width: 100%;
+    padding: 12px;
+    background: rgba(231, 76, 60, 0.2);
+    color: var(--danger);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: var(--transition);
+}
+
+.btn-logout:hover {
+    background: var(--danger);
+    color: var(--text-white);
+}
+
+/* ===== MAIN CONTENT ===== */
+.main-content {
+    flex: 1;
+    margin-left: var(--sidebar-width);
+    transition: var(--transition);
+}
+
+/* ===== TOPBAR ===== */
+.topbar {
+    height: var(--topbar-height);
+    background: var(--bg-secondary);
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    box-shadow: var(--shadow);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.menu-toggle {
+    display: none;
+    background: none;
+    font-size: 24px;
+    color: var(--text-primary);
+    margin-right: 15px;
+}
+
+.topbar-title h1 {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.topbar-actions {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.topbar-date, .topbar-time {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+.connection-status {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--success);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-white);
+    font-size: 14px;
+}
+
+.connection-status.offline {
+    background: var(--danger);
+}
+
+/* ===== PAGES CONTAINER ===== */
+.pages-container {
+    padding: 20px;
+    min-height: calc(100vh - var(--topbar-height));
+}
+
+.page {
+    display: none;
+    animation: fadeIn 0.3s ease;
+}
+
+.page.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== DASHBOARD ===== */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+.card {
+    background: var(--bg-secondary);
+    border-radius: var(--border-radius);
+    padding: 20px;
+    box-shadow: var(--shadow);
+}
+
+.card-stat {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.card-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: var(--text-white);
+}
+
+.card-vendas .card-icon { background: linear-gradient(135deg, var(--primary), var(--primary-light)); }
+.card-clientes .card-icon { background: linear-gradient(135deg, var(--info), #5DADE2); }
+.card-estoque .card-icon { background: linear-gradient(135deg, var(--success), #58D68D); }
+.card-fiado .card-icon { background: linear-gradient(135deg, var(--warning), #F5B041); }
+
+.card-content h3 {
+    font-size: 13px;
+    color: var(--text-secondary);
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+
+.card-value {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.card-content small {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+.card-chart {
+    grid-column: span 2;
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.card-header h3 {
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.chart-container {
+    height: 250px;
+    position: relative;
+}
+
+.card-top-produtos,
+.card-ultimas-vendas {
+    grid-column: span 1;
+}
+
+.card-alertas {
+    grid-column: span 2;
+}
+
+.top-produtos-list,
+.ultimas-vendas-list,
+.alertas-list {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.top-produto-item,
+.venda-item,
+.alerta-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.top-produto-item:last-child,
+.venda-item:last-child,
+.alerta-item:last-child {
+    border-bottom: none;
+}
+
+.empty-message {
+    text-align: center;
+    color: var(--text-secondary);
+    padding: 20px;
+}
+
+/* ===== PDV ===== */
+.pdv-container {
+    display: grid;
+    grid-template-columns: 1fr 400px;
+    gap: 20px;
+    height: calc(100vh - var(--topbar-height) - 40px);
+}
+
+.pdv-produtos {
+    background: var(--bg-secondary);
+    border-radius: var(--border-radius);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.pdv-search {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.pdv-search input {
+    flex: 1;
+    padding: 12px 15px;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.pdv-search input:focus {
+    border-color: var(--primary);
+}
+
+.pdv-search button {
+    padding: 0 20px;
+    background: var(--primary);
+    color: var(--text-white);
+    border-radius: 8px;
+}
+
+.pdv-categorias {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+}
+
+.cat-btn {
+    padding: 8px 16px;
+    background: var(--bg-primary);
+    border-radius: 20px;
+    font-size: 13px;
+    transition: var(--transition);
+}
+
+.cat-btn:hover,
+.cat-btn.active {
+    background: var(--primary);
+    color: var(--text-white);
+}
+
+.pdv-produtos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 15px;
+    overflow-y: auto;
+    flex: 1;
+    padding-right: 5px;
+}
+
+.produto-card {
+    background: var(--bg-primary);
+    border-radius: 12px;
+    padding: 15px;
+    text-align: center;
+    cursor: pointer;
+    transition: var(--transition);
+    border: 2px solid transparent;
+}
+
+.produto-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow);
+    border-color: var(--primary);
+}
+
+.produto-card.sem-estoque {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.produto-emoji {
+    font-size: 36px;
+    margin-bottom: 10px;
+}
+
+.produto-nome {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.produto-preco {
+    color: var(--primary);
+    font-weight: 700;
+    font-size: 14px;
+}
+
+.produto-estoque {
+    font-size: 11px;
+    color: var(--text-secondary);
+    margin-top: 5px;
+}
+
+/* ===== CARRINHO ===== */
+.pdv-carrinho {
+    background: var(--bg-secondary);
+    border-radius: var(--border-radius);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.carrinho-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.carrinho-header h3 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 18px;
+}
+
+.btn-limpar {
+    padding: 8px 15px;
+    background: var(--danger);
+    color: var(--text-white);
+    border-radius: 6px;
+    font-size: 12px;
+}
+
+.carrinho-cliente {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.carrinho-cliente select {
+    flex: 1;
+    padding: 10px;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+}
+
+.carrinho-cliente button {
+    width: 40px;
+    background: var(--primary);
+    color: var(--text-white);
+    border-radius: 8px;
+}
+
+.carrinho-itens {
+    flex: 1;
+    overflow-y: auto;
+    margin-bottom: 15px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 10px;
+}
+
+.empty-cart {
+    text-align: center;
+    color: var(--text-secondary);
+    padding: 30px;
+}
+
+.carrinho-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.carrinho-item:last-child {
+    border-bottom: none;
+}
+
+.item-info {
+    flex: 1;
+}
+
+.item-nome {
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.item-detalhes {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+.item-total {
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.item-remover {
+    background: none;
+    color: var(--danger);
+    font-size: 16px;
+}
+
+.carrinho-totais {
+    padding: 15px 0;
+    border-top: 2px solid var(--border-color);
+}
+
+.total-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+.total-row.total-final {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--primary);
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 2px dashed var(--border-color);
+}
+
+.desconto-input {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.desconto-input input {
+    width: 60px;
+    padding: 5px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    text-align: center;
+}
+
+.desconto-input select {
+    padding: 5px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+}
+
+.carrinho-pagamento select {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    margin-bottom: 15px;
+    font-size: 14px;
+}
+
+.carrinho-troco {
+    background: var(--bg-primary);
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+.troco-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.troco-row input {
+    width: 120px;
+    padding: 8px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    text-align: right;
+}
+
+.troco-valor span:last-child {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--success);
+}
+
+.btn-finalizar {
+    width: 100%;
+    padding: 15px;
+    background: var(--success);
+    color: var(--text-white);
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: var(--transition);
+}
+
+.btn-finalizar:hover {
+    background: #219653;
+}
+
+/* ===== PAGES COMMON ===== */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.page-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.page-search input {
+    padding: 10px 15px;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    width: 250px;
+}
+
+.btn-primary {
+    padding: 10px 20px;
+    background: var(--primary);
+    color: var(--text-white);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+    transition: var(--transition);
+}
+
+.btn-primary:hover {
+    background: var(--primary-dark);
+}
+
+.btn-secondary {
+    padding: 10px 20px;
+    background: var(--secondary);
+    color: var(--text-white);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+    transition: var(--transition);
+}
+
+.btn-danger {
+    padding: 10px 20px;
+    background: var(--danger);
+    color: var(--text-white);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+}
+
+/* ===== TABS ===== */
+.clientes-tabs,
+.estoque-tabs,
+.config-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.tab-btn {
+    padding: 10px 20px;
+    background: var(--bg-secondary);
+    border-radius: 8px;
+    font-weight: 500;
+    transition: var(--transition);
+}
+
+.tab-btn:hover,
+.tab-btn.active {
+    background: var(--primary);
+    color: var(--text-white);
+}
+
+/* ===== TABLES ===== */
+.table-container {
+    overflow-x: auto;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--bg-secondary);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+}
+
+.data-table th,
+.data-table td {
+    padding: 12px 15px;
+    text-align: left;
+}
+
+.data-table th {
+    background: var(--bg-primary);
+    font-weight: 600;
+    font-size: 13px;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+}
+
+.data-table td {
+    border-bottom: 1px solid var(--border-color);
+}
+
+.data-table tr:hover td {
+    background: var(--bg-primary);
+}
+
+.data-table .actions {
+    display: flex;
+    gap: 8px;
+}
+
+.data-table .btn-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-primary);
+    color: var(--text-secondary);
+    transition: var(--transition);
+}
+
+.data-table .btn-icon:hover {
+    background: var(--primary);
+    color: var(--text-white);
+}
+
+.data-table .btn-icon.danger:hover {
+    background: var(--danger);
+}
+
+/* ===== FINANCEIRO ===== */
+.financeiro-header {
+    margin-bottom: 20px;
+}
+
+.caixa-status {
+    background: var(--bg-secondary);
+    padding: 20px;
+    border-radius: var(--border-radius);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.caixa-info h3 {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-bottom: 5px;
+}
+
+.caixa-info p {
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.caixa-info p.aberto {
+    color: var(--success);
+}
+
+.caixa-info p.fechado {
+    color: var(--danger);
+}
+
+.financeiro-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.financeiro-grid .card h3 {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.financeiro-grid .value {
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.text-success { color: var(--success); }
+.text-danger { color: var(--danger); }
+.text-warning { color: var(--warning); }
+
+.financeiro-actions {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.btn-action {
+    padding: 15px 25px;
+    background: var(--bg-secondary);
+    border-radius: var(--border-radius);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 500;
+    transition: var(--transition);
+    box-shadow: var(--shadow);
+}
+
+.btn-action:hover {
+    background: var(--primary);
+    color: var(--text-white);
+}
+
+/* ===== RELATÓRIOS ===== */
+.relatorios-filtros {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.filtro-grupo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.filtro-grupo label {
+    font-weight: 500;
+}
+
+.filtro-grupo select,
+.filtro-grupo input {
+    padding: 10px;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+}
+
+.relatorios-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.card-relatorio.full-width {
+    grid-column: span 2;
+}
+
+.card-relatorio canvas {
+    max-height: 300px;
+}
+
+/* ===== CONFIGURAÇÕES ===== */
+.config-section {
+    display: none;
+}
+
+.config-section.active {
+    display: block;
+}
+
+.config-section .card {
+    max-width: 800px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 14px;
+    transition: var(--transition);
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: var(--primary);
+}
+
+.checkbox-group label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+}
+
+.checkbox-group input {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--primary);
+}
+
+.backup-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.backup-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+    background: var(--bg-primary);
+    border-radius: 8px;
+}
+
+.backup-item.danger {
+    background: rgba(231, 76, 60, 0.1);
+}
+
+.backup-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.backup-info i {
+    font-size: 24px;
+    color: var(--primary);
+}
+
+.backup-item.danger .backup-info i {
+    color: var(--danger);
+}
+
+.backup-info h4 {
+    margin-bottom: 5px;
+}
+
+.backup-info p {
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+/* ===== MODAIS ===== */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 2000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.modal.active {
+    display: flex;
+    animation: fadeIn 0.3s ease;
+}
+
+.modal-content {
+    background: var(--bg-secondary);
+    border-radius: var(--border-radius);
+    width: 100%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: slideUp 0.3s ease;
+}
+
+.modal-sm {
+    max-width: 400px;
+}
+
+.modal-recibo {
+    max-width: 350px;
+}
+
+@keyframes slideUp {
+    from { transform: translateY(50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.modal-header h3 {
+    font-size: 18px;
+}
+
+.modal-close {
+    background: none;
+    font-size: 20px;
+    color: var(--text-secondary);
+}
+
+.modal-body {
+    padding: 20px;
+}
+
+.modal-footer {
+    padding: 15px 20px;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.produto-info-modal {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.produto-info-modal h4 {
+    font-size: 18px;
+    margin-bottom: 5px;
+}
+
+.produto-info-modal p {
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.total-preview {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px;
+    background: var(--bg-primary);
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.total-preview span:last-child {
+    color: var(--primary);
+}
+
+/* ===== RECIBO ===== */
+.recibo-container {
+    background: white;
+    padding: 20px;
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+}
+
+.recibo-header {
+    text-align: center;
+    border-bottom: 1px dashed #000;
+    padding-bottom: 15px;
+    margin-bottom: 15px;
+}
+
+.recibo-header h2 {
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+
+.recibo-header p {
+    font-size: 10px;
+    margin: 2px 0;
+}
+
+.recibo-info {
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px dashed #000;
+}
+
+.recibo-info p {
+    display: flex;
+    justify-content: space-between;
+    margin: 3px 0;
+}
+
+.recibo-itens {
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px dashed #000;
+}
+
+.recibo-item {
+    margin: 5px 0;
+}
+
+.recibo-item-nome {
+    font-weight: bold;
+}
+
+.recibo-item-detalhes {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+}
+
+.recibo-totais {
+    margin-bottom: 15px;
+}
+
+.recibo-totais p {
+    display: flex;
+    justify-content: space-between;
+    margin: 3px 0;
+}
+
+.recibo-totais .total {
+    font-weight: bold;
+    font-size: 14px;
+    border-top: 1px solid #000;
+    padding-top: 5px;
+    margin-top: 5px;
+}
+
+.recibo-footer {
+    text-align: center;
+    font-size: 10px;
+    padding-top: 15px;
+    border-top: 1px dashed #000;
+}
+
+/* ===== FECHAMENTO ===== */
+.fechamento-resumo {
+    background: var(--bg-primary);
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.resumo-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.resumo-item:last-child {
+    border-bottom: none;
+}
+
+.resumo-item.total {
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--primary);
+}
+
+.diferenca-caixa {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 10px;
+    font-weight: 700;
+}
+
+.diferenca-caixa.positivo {
+    background: rgba(39, 174, 96, 0.1);
+    color: var(--success);
+}
+
+.diferenca-caixa.negativo {
+    background: rgba(231, 76, 60, 0.1);
+    color: var(--danger);
+}
+
+/* ===== TOAST ===== */
+.toast {
+    position: fixed;
+    bottom: -100px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--text-primary);
+    color: var(--text-white);
+    padding: 15px 25px;
+    border-radius: 8px;
+    box-shadow: var(--shadow-lg);
+    z-index: 3000;
+    transition: bottom 0.3s ease;
+}
+
+.toast.show {
+    bottom: 30px;
+}
+
+.toast-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.toast.success .toast-icon { color: var(--success); }
+.toast.error .toast-icon { color: var(--danger); }
+.toast.warning .toast-icon { color: var(--warning); }
+.toast.info .toast-icon { color: var(--info); }
+
+/* ===== PWA INSTALL ===== */
+.install-prompt {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--bg-secondary);
+    padding: 15px 25px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-lg);
+    z-index: 2500;
+    animation: slideUp 0.3s ease;
+}
+
+.install-content {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.install-content i {
+    font-size: 24px;
+    color: var(--primary);
+}
+
+.install-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.install-buttons button {
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-weight: 500;
+}
+
+.install-buttons button:first-child {
+    background: var(--primary);
+    color: var(--text-white);
+}
+
+.install-buttons button:last-child {
+    background: var(--bg-primary);
+}
+
+/* ===== FIADO INFO ===== */
+.fiado-info {
+    background: var(--bg-primary);
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.fiado-info strong {
+    color: var(--danger);
+    font-size: 18px;
+}
+
+/* ===== ALERTAS ===== */
+.alerta-item {
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 10px;
+}
+
+.alerta-item.warning {
+    background: rgba(243, 156, 18, 0.1);
+    border-left: 3px solid var(--warning);
+}
+
+.alerta-item.danger {
+    background: rgba(231, 76, 60, 0.1);
+    border-left: 3px solid var(--danger);
+}
+
+.alerta-item i {
+    margin-right: 10px;
+}
+
+/* ===== RESPONSIVIDADE ===== */
+@media (max-width: 1200px) {
+    .dashboard-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .card-chart {
+        grid-column: span 2;
+    }
+    
+    .card-alertas {
+        grid-column: span 2;
+    }
+    
+    .financeiro-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 992px) {
+    .sidebar {
+        transform: translateX(-100%);
+    }
+    
+    .sidebar.open {
+        transform: translateX(0);
+    }
+    
+    .sidebar-close {
+        display: block;
+    }
+    
+    .main-content {
+        margin-left: 0;
+    }
+    
+    .menu-toggle {
+        display: block;
+    }
+    
+    .pdv-container {
+        grid-template-columns: 1fr;
+        height: auto;
+    }
+    
+    .pdv-carrinho {
+        order: -1;
+    }
+    
+    .relatorios-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .card-relatorio.full-width {
+        grid-column: span 1;
+    }
+}
+
+@media (max-width: 768px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .card-chart,
+    .card-alertas {
+        grid-column: span 1;
+    }
+    
+    .financeiro-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .financeiro-actions {
+        flex-direction: column;
+    }
+    
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+    
+    .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .page-search input {
+        width: 100%;
+    }
+    
+    .topbar-date {
+        display: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .login-container {
+        padding: 25px;
+    }
+    
+    .card-stat {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .pdv-categorias {
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        padding-bottom: 10px;
+    }
+    
+    .cat-btn {
+        flex-shrink: 0;
+    }
+    
+    .modal-content {
+        margin: 10px;
+        max-height: 95vh;
+    }
+    
+    .modal-footer {
+        flex-direction: column;
+    }
+    
+    .modal-footer button {
+        width: 100%;
+    }
+}
+
+/* ===== SCROLLBAR CUSTOM ===== */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--text-light);
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--text-secondary);
+}
+
+/* ===== PRINT ===== */
+@media print {
+    body * {
+        visibility: hidden;
+    }
+    
+    .recibo-container,
+    .recibo-container * {
+        visibility: visible;
+    }
+    
+    .recibo-container {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 80mm;
+    }
+}

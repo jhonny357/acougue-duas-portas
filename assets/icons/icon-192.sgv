@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#8B0000"/>
+      <stop offset="100%" style="stop-color:#5C0000"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Fundo -->
+  <rect width="192" height="192" rx="30" fill="url(#bg)"/>
+  
+  <!-- Portas simplificadas -->
+  <rect x="40" y="45" width="45" height="90" rx="5" fill="#FFFFFF" opacity="0.9"/>
+  <rect x="45" y="50" width="35" height="80" rx="3" fill="#8B0000"/>
+  <circle cx="72" cy="90" r="3" fill="#FFFFFF"/>
+  
+  <rect x="107" y="45" width="45" height="90" rx="5" fill="#FFFFFF" opacity="0.9"/>
+  <rect x="112" y="50" width="35" height="80" rx="3" fill="#8B0000"/>
+  <circle cx="120" cy="90" r="3" fill="#FFFFFF"/>
+  
+  <!-- Carne -->
+  <ellipse cx="96" cy="90" rx="25" ry="16" fill="#FFF5E6"/>
+  <ellipse cx="96" cy="90" rx="20" ry="13" fill="#FFE4C4"/>
+  <path d="M80 87 Q88 84 96 86 Q104 84 112 87" stroke="#D2691E" stroke-width="2" fill="none"/>
+  <path d="M80 93 Q88 91 96 92 Q104 91 112 93" stroke="#D2691E" stroke-width="2" fill="none"/>
+  
+  <!-- Texto DP -->
+  <text x="96" y="162" font-family="Arial Black, sans-serif" font-size="40" 
+        font-weight="bold" text-anchor="middle" fill="#FFFFFF">DP</text>
+</svg>
